@@ -1,0 +1,9 @@
+            table attributes table (encode or decode)
+                         |
+                         |
+                         V
+            table content column attribute table (encode or decode)
+                         |
+                         |
+                         V
+            table content (real table)(encode or decode)
