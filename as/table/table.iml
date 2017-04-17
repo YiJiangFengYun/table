@@ -4,6 +4,11 @@
     <configurations>
       <configuration name="table" pure-as="true" output-type="Library" output-file="table.swc" output-folder="$MODULE_DIR$/../../../out/production/table">
         <dependencies target-player="25.0">
+          <entries>
+            <entry library-id="0100ad51-7637-4f5a-9403-484293c78f0a">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
           <sdk name="AIRSDK_Compiler_version_25.0.0.134_for_cloud" />
         </dependencies>
         <compiler-options />
@@ -21,5 +26,15 @@
     </content>
     <orderEntry type="jdk" jdkName="AIRSDK_Compiler_version_25.0.0.134_for_cloud" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library" exported="">
+      <library type="flex">
+        <properties id="0100ad51-7637-4f5a-9403-484293c78f0a" />
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/box.swc!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
