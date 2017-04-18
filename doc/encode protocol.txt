@@ -3,9 +3,10 @@ table encode.
 	   first table storage the attributes of target table.
 	   second table storage the attributes of columns of target table.
 	   third table is real target table.
-	every table contain two parts:
+	every table contain third parts:
 	   first part is storage total bytes length of table. its length of bytes is 4 bytes.
-	   second part, namely, remain part is real content of table.
+	   second part is storage row and  column count of table. 2 bytes storage row count and 1 bytes storage column count.
+           thrid part, namely, remain part is real content of table.
 
 
 cell encode.

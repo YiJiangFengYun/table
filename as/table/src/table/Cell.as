@@ -21,6 +21,9 @@ package table
             m_content = null;
         }
 
+        public function get typeId():int { return m_typeId; }
+        internal function setTypeId(value:int):void { m_typeId = value; }
+
         public function copyFrom(src:Cell):void
         {
             m_typeId = src.m_typeId;

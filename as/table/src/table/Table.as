@@ -10,37 +10,87 @@ package table
         private var m_name:String;
         private var m_colAttributes:Vector.<Column>;
         private var m_data:Vector.<Vector.<Cell>>;
-        private var m_rowCount:int;
-        private var m_colCount:int;
+        private var m_rowCount:uint;
+        private var m_colCount:uint;
 
         public function Table(name:String,
                               rowCount:uint,
                               colCount:uint,
                               colAttributes:Vector.<Column>)
         {
+
+        }
+
+        internal function set(name:String,
+                              rowCount:uint,
+                              colCount:uint,
+                              colAttributes:Vector.<Column>):void
+        {
             m_name = name;
             m_rowCount = rowCount;
             m_colCount = colCount;
             var i:int;
             var j:int;
-            var myColAttrs:Vector.<Column> = new Vector.<Column>(colCount);
-            myColAttrs.fixed = true;
-            m_colAttributes = myColAttrs;
+            var myColAttrs:Vector.<Column> = m_colAttributes;
+            if(myColAttrs == null)
+            {
+                m_colAttributes = myColAttrs = new Vector.<Column>(colCount);
+                myColAttrs.fixed = true;
+            }
+            else if(myColAttrs.length < colCount)
+            {
+                myColAttrs.fixed = false;
+                myColAttrs.length = colCount;
+                myColAttrs.fixed = true;
+            }
             for(i = 0; i < colCount; ++i)
             {
-                myColAttrs[i] = colAttributes[i].clone();
+                if(myColAttrs[i] == null)
+                {
+                    myColAttrs[i] = colAttributes[i].clone();
+                }
+                else
+                {
+                    myColAttrs[i].copyFrom(colAttributes[i]);
+                }
             }
 
-            var data:Vector.<Vector.<Cell>> = new Vector.<Vector.<Cell>>(rowCount);
-            data.fixed = true;
+            var data:Vector.<Vector.<Cell>> = m_data;
+            if(data == null)
+            {
+                m_data = data = new Vector.<Vector.<Cell>>(rowCount);
+                data.fixed = true;
+            }
+            else if(data.length < rowCount)
+            {
+                data.fixed = false;
+                data.length = rowCount;
+                data.fixed = true;
+            }
             m_data = data;
             for(i = 0; i < rowCount; ++i)
             {
-                data[i] = new Vector.<Cell>(colCount);
-                data[i].fixed = true;
+                if(data[i] == null)
+                {
+                    data[i] = new Vector.<Cell>(colCount);
+                    data[i].fixed = true;
+                }
+                else if(data[i].length < colCount)
+                {
+                    data[i].fixed = false;
+                    data[i].length = colCount;
+                    data[i].fixed = true;
+                }
                 for(j = 0; j < colCount; ++j)
                 {
-                    data[i][j] = new Cell(myColAttrs[j].typeId);
+                    if(data[i][j] == null)
+                    {
+                        data[i][j] = new Cell(myColAttrs[j].typeId);
+                    }
+                    else
+                    {
+                        data[i][j].setTypeId(myColAttrs[j].typeId);
+                    }
                 }
             }
         }
@@ -74,5 +124,8 @@ package table
         {
             m_data[row][col].writeWithByteArray(byteArray, offset, length);
         }
+
+        public function get rowCount():uint { return m_rowCount; }
+        public function get colCount():uint { return m_colCount; }
     }
 }
