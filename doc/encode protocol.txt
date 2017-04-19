@@ -4,9 +4,8 @@ table encode.
 	   second table storage the attributes of columns of target table.
 	   third table is real target table.
 	every table contain third parts:
-	   first part is storage total bytes length of table. its length of bytes is 4 bytes.
-	   second part is storage row and  column count of table. 2 bytes storage row count and 1 bytes storage column count.
-           thrid part, namely, remain part is real content of table.
+	   first part is storage row and  column count of table. 2 bytes storage row count and 1 bytes storage column count.
+           second part, namely, remain part is real content of table.
 
 
 cell encode.
@@ -14,3 +13,4 @@ If the cell type is not string, cell bytes storage pure data.
 If the cell type is char[],  first one byte of cell bytes storage bytes length of cell value.
 If the cell type is unicode string, first two bytes of cell bytes storage bytes length of cell value.
    
+number encode use BigEndian.
