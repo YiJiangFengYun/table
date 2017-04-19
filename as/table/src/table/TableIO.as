@@ -17,7 +17,7 @@ package table
             //3 means three bytes storage row and column count of table.
             // and 1 means first one byte of cell bytes storage bytes length of cell value.
             var offsetBytes:int = 3 + 1;
-            var tableName:String = CellType.read(CellType.charStr_value,
+            var tableName:String = CellIO.read(CellType.charStr_value,
                                                  byteArray,
                                                  byteArray.position + offsetBytes,
                                                  lengthTableBytes - offsetBytes) as String;
@@ -36,17 +36,17 @@ package table
                 //first column of this table storage column name of target table. its type is char[].
                 //get column name
                 var lengthColumnBytes:int = byteArray.readUnsignedByte();  //get length of bytes of column value stored in one byte
-                var colName:String = CellType.read(CellType.charStr_value,
+                var colName:String = CellIO.read(CellType.charStr_value,
                                                    byteArray, byteArray.position, lengthColumnBytes) as String;
                 //get column type id
-                var colTypeId:int = CellType.read(CellType.int_value, byteArray) as int;
+                var colTypeId:int = CellIO.read(CellType.int_value, byteArray) as int;
 
                 //third column of this table storage column description of target table, its type is unicode string.
                 //get column description.
                 lengthColumnBytes = byteArray.readUnsignedShort(); //get length of bytes of column value stored in two byte
                 if(lengthColumnBytes != 0)
                 {
-                    var colDescription:String = CellType.read(CellType.unicodeStr_value,
+                    var colDescription:String = CellIO.read(CellType.unicodeStr_value,
                                                               byteArray,
                                                               byteArray.position,
                                                               lengthColumnBytes) as String;

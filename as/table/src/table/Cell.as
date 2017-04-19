@@ -50,12 +50,12 @@ package table
 
         public function read():Object
         {
-            return CellType.read(m_typeId, m_content, 0, m_content.length);
+            return CellIO.read(m_typeId, m_content, 0, m_content.length);
         }
 
         public function write(value:Object):void
         {
-            CellType.write(m_typeId, value, m_content, 0);
+            CellIO.write(m_typeId, value, m_content, 0);
         }
 
         public function writeWithByteArray(value:ByteArray, offset:uint = 0, length:uint = 0):void
