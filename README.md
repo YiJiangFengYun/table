@@ -1,2 +1,2 @@
 # table
-table encoded to binary, binary decoded to table and table io features.
+this project implements table construction and table binary storage protocol.
