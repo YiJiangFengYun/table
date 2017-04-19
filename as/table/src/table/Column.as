@@ -15,7 +15,7 @@ package table
             m_description = description;
         }
 
-        public function set(name:String = null, typeId:int = 0, description:String = null)
+        public function set(name:String = null, typeId:int = 0, description:String = null):void
         {
             m_name = name;
             m_typeId = typeId;

@@ -18,7 +18,7 @@ package table
                               colCount:uint,
                               colAttributes:Vector.<Column>)
         {
-
+            set(name, rowCount, colCount, colAttributes);
         }
 
         internal function set(name:String,
@@ -67,7 +67,6 @@ package table
                 data.length = rowCount;
                 data.fixed = true;
             }
-            m_data = data;
             for(i = 0; i < rowCount; ++i)
             {
                 if(data[i] == null)
@@ -98,7 +97,7 @@ package table
         public function get name():String { return m_name; }
         public function set name(value:String):void { m_name = value; }
 
-        public function getColAttribute(col:int):Column { return m_colAttributes[col]; }
+        public function getColAttribute(col:uint):Column { return m_colAttributes[col]; }
 
         /**
          * Get a cell of the table.

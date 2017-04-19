@@ -12,18 +12,17 @@ package table
         {
             byteArray.position = 0;
             ///1.Parse first table, namely, table attributes.
-            var lengthTableBytes:int = byteArray.readUnsignedInt(); //get table total length of bytes from first 4 bytes.
             //Now there are only one attribute of table (name attribute). so table parsing has one row and one column.
             //3 means three bytes storage row and column count of table.
+            byteArray.position = 3;
             // and 1 means first one byte of cell bytes storage bytes length of cell value.
-            var offsetBytes:int = 3 + 1;
+            var lengthColumnBytes:int = byteArray.readUnsignedByte();  //get length of bytes of column value stored in one byte
             var tableName:String = CellIO.read(CellType.charStr_value,
                                                  byteArray,
-                                                 byteArray.position + offsetBytes,
-                                                 lengthTableBytes - offsetBytes) as String;
+                                                 byteArray.position,
+                                                 lengthColumnBytes) as String;
 
             ///2.Parse second table, namely table column attributes.
-            lengthTableBytes = byteArray.readUnsignedInt(); //get table total length of bytes from first 4 bytes.
             var rowCount:int = byteArray.readUnsignedShort(); //get table row count;
             var columnCount:int = byteArray.readUnsignedByte(); //get table column count;
             var columnAttributes:Vector.<Column> = m_colAttsHelper;
@@ -35,7 +34,7 @@ package table
             {
                 //first column of this table storage column name of target table. its type is char[].
                 //get column name
-                var lengthColumnBytes:int = byteArray.readUnsignedByte();  //get length of bytes of column value stored in one byte
+                lengthColumnBytes = byteArray.readUnsignedByte();  //get length of bytes of column value stored in one byte
                 var colName:String = CellIO.read(CellType.charStr_value,
                                                    byteArray, byteArray.position, lengthColumnBytes) as String;
                 //get column type id
@@ -70,7 +69,6 @@ package table
             }
 
             ///3.Parse third table, its is real target table.
-            lengthTableBytes = byteArray.readUnsignedInt(); //get table total length of bytes from first 4 bytes
             rowCount = byteArray.readUnsignedShort(); //get table row count;
             columnCount = byteArray.readUnsignedByte(); //get table column count;
             if(resultTable == null)

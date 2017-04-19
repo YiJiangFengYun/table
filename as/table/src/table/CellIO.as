@@ -4,13 +4,14 @@
 package table
 {
     import flash.utils.ByteArray;
+    import flash.utils.Endian;
 
     import table.CellType;
 
     public final class CellIO
     {
         /**
-         * read value of specified type id from byteArray
+         * Read value of specified type id from byteArray.
          * @param id           type id
          * @param byteArray    origin binary data
          * @param startPos     start pos of byteArray for reading
@@ -19,6 +20,7 @@ package table
          */
         public static function read(id:int, byteArray:ByteArray, startPos:uint = 0, length:uint = 0):Object
         {
+            byteArray.endian = Endian.BIG_ENDIAN;
             byteArray.position = startPos;
             switch(id)
             {
@@ -60,14 +62,14 @@ package table
         }
 
         /**
-         * read value of specified type id to byteArray
+         * Write value of specified type id to byteArray
          * @param id           type id
          * @param value        type value
          * @param result       target binary data
          * @param startPos     start pos of byteArray for writing
          * @return             result byte stream.
          */
-        public static function write(id:int, value:Object, result:ByteArray = null, startPos:int = 0):ByteArray
+        public static function write(id:int, value:Object, result:ByteArray = null, startPos:uint = 0):ByteArray
         {
             if(result == null)
             {
@@ -78,12 +80,13 @@ package table
             {
                 result.position = startPos;
             }
+            result.endian = Endian.BIG_ENDIAN;
 
             switch (id)
             {
                 case CellType.null_value:
                 {
-                    return null;
+                    return result;
                     break;
                 }
                 case CellType.bool_value:
