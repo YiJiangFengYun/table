@@ -168,15 +168,15 @@ namespace table
             return resultTable;
         }
 
-        public static byte[] Write(object[][] tableOfTableAttr,
-            object[][] tableOfColumnAttr, List<List<object>> table)
+        public static byte[] Write(object[,] tableOfTableAttr,
+            object[,] tableOfColumnAttr, object[,] table)
         {
             List<byte> resultList = new List<byte>();
 
             ///Write first table.
-            int rowCount = tableOfTableAttr.Length;
+            int rowCount = tableOfTableAttr.GetLength(0);
             if (rowCount == 0) throw new ArgumentException("Table for target table attribute is empty.");
-            int colCount = tableOfTableAttr[0].Length;
+            int colCount = tableOfTableAttr.GetLength(1);
             if (colCount == 0) throw new ArgumentException("Table for target table attribute is empty.");
             //row count write to 2 bytes and col count write to 1 byte.
             byte[] tempBytes = BitConverter.GetBytes((short)rowCount);
@@ -187,8 +187,8 @@ namespace table
             resultList.AddRange(tempBytes);
 
             //write table name.
-            if (tableOfTableAttr[0][0] == null) throw new ArgumentException("Table name don't exist.");
-            string tableName = tableOfTableAttr[0][0].ToString();
+            if (tableOfTableAttr[0, 0] == null) throw new ArgumentException("Table name don't exist.");
+            string tableName = tableOfTableAttr[0, 0].ToString();
             byte[] stringTempBytes = System.Text.Encoding.ASCII.GetBytes(tableName);
             if (stringTempBytes.Length > byte.MaxValue) throw new ArgumentException("Table name length exceed limit " + byte.MaxValue + ".");
             //write length of bytes of tableName
@@ -200,9 +200,9 @@ namespace table
             ///End write first table.
 
             ///Write second table.
-            rowCount = tableOfColumnAttr.Length;
+            rowCount = tableOfColumnAttr.GetLength(0);
             if (rowCount == 0) throw new ArgumentException("Table for target table columns attributes is empty.");
-            colCount = tableOfColumnAttr[0].Length;
+            colCount = tableOfColumnAttr.GetLength(1);
             if (colCount == 0) throw new ArgumentException("Table for target table columns attributes is empty.");
             //row count write to 2 bytes and col count write to 1 byte.
             tempBytes = BitConverter.GetBytes((short)rowCount);
@@ -216,8 +216,8 @@ namespace table
             for (int i = 0; i < rowCount; ++i)
             {
                 //first column of this table storage column name of target table. its type is char[].
-                if (tableOfColumnAttr[i][0] == null) throw new ArgumentException("Column name don't exist.");
-                tableName = tableOfColumnAttr[i][0].ToString();
+                if (tableOfColumnAttr[i, 0] == null) throw new ArgumentException("Column name don't exist.");
+                tableName = tableOfColumnAttr[i, 0].ToString();
                 stringTempBytes = System.Text.Encoding.ASCII.GetBytes(tableName);
                 if (stringTempBytes.Length > byte.MaxValue) throw new ArgumentException("Column name length exceed limit " + byte.MaxValue + ".");
                 //write length of bytes of column name, it is stored in one byte.
@@ -228,8 +228,8 @@ namespace table
                 resultList.AddRange(stringTempBytes);
 
                 //second column of this table store column type name of target table.
-                if (tableOfColumnAttr[i][1] == null) throw new ArgumentException("Column type don't exist.");
-                string colTypeName = tableOfColumnAttr[i][1].ToString();
+                if (tableOfColumnAttr[i, 1] == null) throw new ArgumentException("Column type don't exist.");
+                string colTypeName = tableOfColumnAttr[i, 1].ToString();
                 int typeId = Array.FindIndex(CellType.TypeNames, s => s.Equals(colTypeName));
                 if (typeId < 0) throw new ArgumentException("Column type name specified don't exist.");
                 typeIds[i] = typeId;
@@ -238,9 +238,9 @@ namespace table
 
                 //thrid column of this table store column description of target table. its type is unicode string.
                 string columnDes;
-                if (tableOfColumnAttr[i][2] != null)
+                if (tableOfColumnAttr[i, 2] != null)
                 {
-                    columnDes = tableOfColumnAttr[i][2].ToString();
+                    columnDes = tableOfColumnAttr[i, 2].ToString();
                 }
                 else
                 {
@@ -258,9 +258,9 @@ namespace table
                 ///End write second table.
 
                 ///Write third table. it is real target table.
-                rowCount = table.Count;
+                rowCount = table.GetLength(0);
                 if (rowCount == 0) throw new ArgumentException("Target table is empty.");
-                colCount = table[0].Count;
+                colCount = table.GetLength(1);
                 if (colCount == 0) throw new ArgumentException("Target table is empty.");
                 //The valid columns of target table should match the rows of second table.
                 if (colCount > typeIds.Length) colCount = typeIds.Length;
@@ -281,9 +281,9 @@ namespace table
                             typeId == (int)CellType.TypeId.UnicodeStr_Value)
                         {
                             string strContent;
-                            if(table[i][j] != null)
+                            if(table[i, j] != null)
                             {
-                                strContent = table[i][j].ToString();
+                                strContent = table[i, j].ToString();
                             }
                             else
                             {
@@ -321,21 +321,21 @@ namespace table
                             object content;
                             if(typeId == (int)CellType.TypeId.Int_Value)
                             {
-                                content = Convert.ToInt32(table[i][j]);
+                                content = Convert.ToInt32(table[i, j]);
                             }
                             else if(typeId == (int)CellType.TypeId.Float_Value)
                             {
-                                content = Convert.ToSingle(table[i][j]);
+                                content = Convert.ToSingle(table[i, j]);
                             }
                             else
                             {
-                                content = Convert.ToDouble(table[i][j]);
+                                content = Convert.ToDouble(table[i, j]);
                             }
                             resultList.AddRange(CellIO.Write((CellType.TypeId)typeId, content));
                         }
                         else if(typeId == (int)CellType.TypeId.Bool_Value)
                         {
-                            bool content = Convert.ToBoolean(table[i][j]);
+                            bool content = Convert.ToBoolean(table[i, j]);
                             resultList.AddRange(CellIO.Write((CellType.TypeId)typeId, content));
                         }
                         else  //null type
