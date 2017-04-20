@@ -168,15 +168,15 @@ namespace table
             return resultTable;
         }
 
-        public static byte[] Write(List<List<object>> tableOfTableAttr,
-            List<List<object>> tableOfColumnAttr, List<List<object>> table)
+        public static byte[] Write(object[][] tableOfTableAttr,
+            object[][] tableOfColumnAttr, List<List<object>> table)
         {
             List<byte> resultList = new List<byte>();
 
             ///Write first table.
-            int rowCount = tableOfTableAttr.Count;
+            int rowCount = tableOfTableAttr.Length;
             if (rowCount == 0) throw new ArgumentException("Table for target table attribute is empty.");
-            int colCount = tableOfTableAttr[0].Count;
+            int colCount = tableOfTableAttr[0].Length;
             if (colCount == 0) throw new ArgumentException("Table for target table attribute is empty.");
             //row count write to 2 bytes and col count write to 1 byte.
             byte[] tempBytes = BitConverter.GetBytes((short)rowCount);
@@ -200,9 +200,9 @@ namespace table
             ///End write first table.
 
             ///Write second table.
-            rowCount = tableOfColumnAttr.Count;
+            rowCount = tableOfColumnAttr.Length;
             if (rowCount == 0) throw new ArgumentException("Table for target table columns attributes is empty.");
-            colCount = tableOfColumnAttr[0].Count;
+            colCount = tableOfColumnAttr[0].Length;
             if (colCount == 0) throw new ArgumentException("Table for target table columns attributes is empty.");
             //row count write to 2 bytes and col count write to 1 byte.
             tempBytes = BitConverter.GetBytes((short)rowCount);
