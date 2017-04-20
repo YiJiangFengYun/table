@@ -8,13 +8,13 @@ package table
     public final class TableIO
     {
         private static var m_colAttsHelper:Vector.<Column> = new Vector.<Column>();
-        public static function read(byteArray:ByteArray, resultTable:Table = null):Table
+        public static function read(byteArray:ByteArray, offset:uint, resultTable:Table = null):Table
         {
-            byteArray.position = 0;
+            byteArray.position = offset;
             ///1.Parse first table, namely, table attributes.
             //Now there are only one attribute of table (name attribute). so table parsing has one row and one column.
             //3 means three bytes storage row and column count of table.
-            byteArray.position = 3;
+            byteArray.position += 3;
             // and 1 means first one byte of cell bytes storage bytes length of cell value.
             var lengthColumnBytes:int = byteArray.readUnsignedByte();  //get length of bytes of column value stored in one byte
             var tableName:String = CellIO.read(CellType.charStr_value,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace table
 {
@@ -52,21 +53,21 @@ namespace table
 
         public object Read()
         {
-            return CellIO.read(typeId, content, 0, (uint)content.Length);
+            return CellIO.Read(typeId, content);
         }
 
         public void Write(object value)
         {
-            content = CellIO.write(typeId, value);
+            content = CellIO.Write(typeId, value);
         }
 
-        public void WriteWithByteArray(byte[] value, uint offset, uint length)
+        public void WriteWithByteArray(List<byte> value, uint offset, uint length)
         {
-            if (length == 0) length = (uint)value.Length;
+            if (length == 0) length = (uint)value.Count;
             content = new byte[length];
             for (var i = 0; i < length; ++i)
             {
-                content[i] = value[offset + i];
+                content[i] = value[(int)offset + i];
             }
         }
     }

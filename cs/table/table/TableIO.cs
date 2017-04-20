@@ -6,21 +6,21 @@ namespace table
     public static class TableIO
     {
         private static List<Column> m_colAttsHelper = new List<Column>();
-        public static Table Read(byte[] byteArray, Table resultTable = null)
+        public static Table Read(List<byte> byteArray, uint offset, Table resultTable = null)
         {
-            uint position = 0;
+            uint position = offset;
             int i;
             int j;
             ///1.Parse first table, namely, table attributes.
             //Now there are only one attribute of table (name attribute). so table parsing has one row and one column.
             //3 means three bytes storage row and column count of table.
-            position = position + 3;
+            position += 3;
             // and 1 means first one byte of cell bytes storage bytes length of cell value.
-            byte[] tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+            byte[] tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
             uint lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);  //get length of bytes of column value stored in one byte
             position += 1;
 
-            string tableName = CellIO.read(CellType.TypeId.CharStr_Value,
+            string tableName = CellIO.Read(CellType.TypeId.CharStr_Value,
                                                  byteArray,
                                                  position,
                                                  lengthColumnBytes) as String;
@@ -29,12 +29,12 @@ namespace table
 
             ///2.Parse second table, namely table column attributes.
             //get table row count;
-            tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1] };
+            tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1] };
             uint rowCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 2;
 
             //get table column count;
-            tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+            tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
             uint columnCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 1;
 
@@ -49,31 +49,31 @@ namespace table
                 //first column of this table storage column name of target table. its type is char[].
 
                 //get length of bytes of column value stored in one byte
-                tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+                tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
                 lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                 position += 1;
 
                 //get column name
-                string colName = CellIO.read(CellType.TypeId.CharStr_Value,
+                string colName = CellIO.Read(CellType.TypeId.CharStr_Value,
                                                    byteArray, position, lengthColumnBytes) as String;
                 position += lengthColumnBytes;
 
 
                 //get column type id
-                CellType.TypeId colTypeId = (CellType.TypeId)CellIO.read(CellType.TypeId.Int_Value, byteArray);
+                CellType.TypeId colTypeId = (CellType.TypeId)CellIO.Read(CellType.TypeId.Int_Value, byteArray);
                 position += 4;
 
                 //third column of this table storage column description of target table, its type is unicode string.
 
                 //get length of bytes of column value stored in two byte
-                tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1] };
+                tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1] };
                 lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                 position += 2;
                 //get column description.
                 string colDescription;
                 if (lengthColumnBytes != 0)
                 {
-                    colDescription = CellIO.read(CellType.TypeId.UnicodeStr_Value,
+                    colDescription = CellIO.Read(CellType.TypeId.UnicodeStr_Value,
                                                               byteArray,
                                                               position,
                                                               lengthColumnBytes) as String;
@@ -99,12 +99,12 @@ namespace table
 
             ///3.Parse third table, its is real target table.
             //get table row count;
-            tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1] };
+            tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1] };
             rowCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 2;
 
             //get table column count;
-            tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+            tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
             columnCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 1;
 
@@ -125,7 +125,7 @@ namespace table
                     if (cell.TypeId == CellType.TypeId.CharStr_Value)
                     {
                         //get length of bytes of column value stored in one byte
-                        tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+                        tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
                         lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                         position += 1;
 
@@ -135,7 +135,7 @@ namespace table
                     else if (cell.TypeId == CellType.TypeId.UnicodeStr_Value)
                     {
                         //get length of bytes of column value stored in two byte
-                        tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1]};
+                        tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1]};
                         lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                         position += 2;
 
