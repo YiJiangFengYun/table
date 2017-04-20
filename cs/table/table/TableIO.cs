@@ -6,7 +6,7 @@ namespace table
     public static class TableIO
     {
         private static List<Column> m_colAttsHelper = new List<Column>();
-        public static Table Read(List<byte> byteArray, uint offset, Table resultTable = null)
+        public static Table Read(byte[] byteArray, uint offset, Table resultTable = null)
         {
             uint position = offset;
             int i;
@@ -16,7 +16,8 @@ namespace table
             //3 means three bytes storage row and column count of table.
             position += 3;
             // and 1 means first one byte of cell bytes storage bytes length of cell value.
-            byte[] tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
+            byte[] tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+            tranToSystemEndian(tempBytes);
             uint lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);  //get length of bytes of column value stored in one byte
             position += 1;
 
@@ -29,12 +30,14 @@ namespace table
 
             ///2.Parse second table, namely table column attributes.
             //get table row count;
-            tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1] };
+            tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1] };
+            tranToSystemEndian(tempBytes);
             uint rowCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 2;
 
             //get table column count;
-            tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
+            tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+            tranToSystemEndian(tempBytes);
             uint columnCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 1;
 
@@ -49,7 +52,8 @@ namespace table
                 //first column of this table storage column name of target table. its type is char[].
 
                 //get length of bytes of column value stored in one byte
-                tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
+                tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+                tranToSystemEndian(tempBytes);
                 lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                 position += 1;
 
@@ -66,7 +70,8 @@ namespace table
                 //third column of this table storage column description of target table, its type is unicode string.
 
                 //get length of bytes of column value stored in two byte
-                tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1] };
+                tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1] };
+                tranToSystemEndian(tempBytes);
                 lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                 position += 2;
                 //get column description.
@@ -99,12 +104,14 @@ namespace table
 
             ///3.Parse third table, its is real target table.
             //get table row count;
-            tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1] };
+            tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1] };
+            tranToSystemEndian(tempBytes);
             rowCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 2;
 
             //get table column count;
-            tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
+            tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+            tranToSystemEndian(tempBytes);
             columnCount = BitConverter.ToUInt32(tempBytes, 0);
             position += 1;
 
@@ -125,7 +132,8 @@ namespace table
                     if (cell.TypeId == CellType.TypeId.CharStr_Value)
                     {
                         //get length of bytes of column value stored in one byte
-                        tempBytes = new byte[] { 0, 0, 0, byteArray[(int)position] };
+                        tempBytes = new byte[] { 0, 0, 0, byteArray[position] };
+                        tranToSystemEndian(tempBytes);
                         lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                         position += 1;
 
@@ -135,7 +143,8 @@ namespace table
                     else if (cell.TypeId == CellType.TypeId.UnicodeStr_Value)
                     {
                         //get length of bytes of column value stored in two byte
-                        tempBytes = new byte[] { 0, 0, byteArray[(int)position], byteArray[(int)position + 1]};
+                        tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1]};
+                        tranToSystemEndian(tempBytes);
                         lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                         position += 2;
 
@@ -159,9 +168,33 @@ namespace table
             return resultTable;
         }
 
-        //public static byte[] Write(Table table)
+        //public static byte[] Write(List<List<object>> tableOfTableAttr, 
+        //    List<List<object>> tableOfColumnAttr, List<List<object>> table, 
+        //    byte[] result = null, uint offsetOfResult = 0)
         //{
+        //    if(result == null)
+        //    {
+        //        result = new byte[]{ };
+        //    }
+        //    int position = (int)offsetOfResult;
 
+        //    int rowCount = tableOfTableAttr.Count;
+        //    if (rowCount == 0) throw new Exception("Table for target table attribute is empty.");
+        //    int colCount = tableOfTableAttr[0].Count;
+        //    //row count write to 2 bytes and col count write to 1 byte.
+        //    byte[] tempBytes = BitConverter.GetBytes((short)rowCount);
+        //    tranToSystemEndian(tempBytes);
+        //    tempBytes = BitConverter.GetBytes((byte)colCount);
+
+            
+            
         //}
+
+        
+        private static void tranToSystemEndian(byte[] bytes)
+        {
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+        }
     }
 }

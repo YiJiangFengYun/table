@@ -61,9 +61,9 @@ namespace table
             content = CellIO.Write(typeId, value);
         }
 
-        public void WriteWithByteArray(List<byte> value, uint offset, uint length)
+        public void WriteWithByteArray(byte[] value, uint offset, uint length)
         {
-            if (length == 0) length = (uint)value.Count;
+            if (length == 0) length = (uint)value.Length;
             content = new byte[length];
             for (var i = 0; i < length; ++i)
             {

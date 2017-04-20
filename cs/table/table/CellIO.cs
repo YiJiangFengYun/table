@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace table
 {
@@ -13,20 +12,7 @@ namespace table
         /// <param name="startPos">Start pos of byteArray for reading</param>
         /// <param name="length">The number of bytes used when the type is string.</param>
         /// <returns>Value of specified type</returns>
-        public static object Read(CellType.TypeId id, List<byte> byteArray, uint startPos = 0, uint length = 0)
-        {
-            return Read(id, byteArray.GetRange((int)startPos, (int)length).ToArray());
-        }
-
-        /// <summary>
-        /// Read value of specified type id from byte array.
-        /// </summary>
-        /// <param name="id">Type id</param>
-        /// <param name="byteArray">Origin binary data</param>
-        /// <param name="startPos">Start pos of byteArray for reading</param>
-        /// <param name="length">The number of bytes used when the type is string.</param>
-        /// <returns>Value of specified type</returns>
-        public static object Read(CellType.TypeId id, byte[] byteArray)
+        public static object Read(CellType.TypeId id, byte[] byteArray, uint startPos = 0, uint length = 0)
         {
             switch (id)
             {
@@ -36,7 +22,7 @@ namespace table
                     }
                 case CellType.TypeId.Bool_Value:
                     {
-                        byte usedByte = byteArray[0];
+                        byte usedByte = byteArray[startPos];
                         return Convert.ToBoolean(usedByte);
                     }
                 case CellType.TypeId.Int_Value:
@@ -47,7 +33,7 @@ namespace table
                         byte[] usedBytes = new byte[byteCount];
                         for (int i = 0; i < byteCount; ++i)
                         {
-                            usedBytes[i] = byteArray[i];
+                            usedBytes[i] = byteArray[startPos + i];
                         }
                         if (BitConverter.IsLittleEndian)
                         {
@@ -73,11 +59,11 @@ namespace table
                     }
                 case CellType.TypeId.CharStr_Value:
                     {
-                        return System.Text.Encoding.ASCII.GetString(byteArray);
+                        return System.Text.Encoding.ASCII.GetString(byteArray, (int)startPos, (int)length);
                     }
                 case CellType.TypeId.UnicodeStr_Value:
                     {
-                        return System.Text.Encoding.UTF8.GetString(byteArray);
+                        return System.Text.Encoding.UTF8.GetString(byteArray, (int)startPos, (int)length);
                     }
                 default:
                     {
