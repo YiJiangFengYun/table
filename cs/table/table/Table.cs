@@ -42,9 +42,9 @@ namespace table
             }
             for(i = 0; i < colCount; ++i)
             {
-                if(myColAtts[i] == null)
+                if(myColAtts.Count <= i)
                 {
-                    myColAtts[i] = colAttributes[i].Clone();
+                    myColAtts.Add(colAttributes[i].Clone());
                 }
                 else
                 {
@@ -63,9 +63,9 @@ namespace table
             }
             for(i = 0; i < rowCount; ++i)
             {
-                if(data[i] == null)
+                if(data.Count <= i)
                 {
-                    data[i] = new List<Cell>((int)colCount);
+                    data.Add(new List<Cell>((int)colCount));
                 }
                 else if(data[i].Capacity < colCount)
                 {
@@ -73,9 +73,9 @@ namespace table
                 }
                 for(j = 0; j < colCount; ++j)
                 {
-                    if(data[i][j] == null)
+                    if(data[i].Count <= j)
                     {
-                        data[i][j] = new Cell(myColAtts[j].TypeId);
+                        data[i].Add(new Cell(myColAtts[j].TypeId));
                     }
                     else
                     {

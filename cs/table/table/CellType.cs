@@ -18,9 +18,9 @@ namespace table
 
         public static readonly string[] TypeNames = {"null", "bool", "int", "float", "double", "char[]", "string" };
         public static readonly int[] TypeByteLengths = {0, 1, 4, 4, 8, -1, -1 };
-        public static string GetTypeName(int id)
+        public static string GetTypeName(TypeId id)
         {
-            return TypeNames[id];
+            return TypeNames[(int)id];
         }
 
         /// <summary>
@@ -29,9 +29,9 @@ namespace table
         /// </summary>
         /// <param name="id"> type id </param>
         /// <returns></returns>
-        public static int GetTypeByteLength(int id)
+        public static int GetTypeByteLength(TypeId id)
         {
-            return TypeByteLengths[id];
+            return TypeByteLengths[(int)id];
         }
     }
 }

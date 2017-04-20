@@ -14,6 +14,7 @@ namespace table
         /// <returns>Value of specified type</returns>
         public static object Read(CellType.TypeId id, byte[] byteArray, uint startPos = 0, uint length = 0)
         {
+            if (length == 0) length = (uint)byteArray.Length;
             switch (id)
             {
                 case CellType.TypeId.Null_Value:
