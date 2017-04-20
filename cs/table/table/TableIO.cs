@@ -143,7 +143,7 @@ namespace table
                     else if (cell.TypeId == CellType.TypeId.UnicodeStr_Value)
                     {
                         //get length of bytes of column value stored in two byte
-                        tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1]};
+                        tempBytes = new byte[] { 0, 0, byteArray[position], byteArray[position + 1] };
                         tranToSystemEndian(tempBytes);
                         lengthColumnBytes = BitConverter.ToUInt32(tempBytes, 0);
                         position += 2;
@@ -168,30 +168,193 @@ namespace table
             return resultTable;
         }
 
-        //public static byte[] Write(List<List<object>> tableOfTableAttr, 
-        //    List<List<object>> tableOfColumnAttr, List<List<object>> table, 
-        //    byte[] result = null, uint offsetOfResult = 0)
-        //{
-        //    if(result == null)
-        //    {
-        //        result = new byte[]{ };
-        //    }
-        //    int position = (int)offsetOfResult;
+        public static byte[] Write(List<List<object>> tableOfTableAttr,
+            List<List<object>> tableOfColumnAttr, List<List<object>> table)
+        {
+            List<byte> resultList = new List<byte>();
 
-        //    int rowCount = tableOfTableAttr.Count;
-        //    if (rowCount == 0) throw new Exception("Table for target table attribute is empty.");
-        //    int colCount = tableOfTableAttr[0].Count;
-        //    //row count write to 2 bytes and col count write to 1 byte.
-        //    byte[] tempBytes = BitConverter.GetBytes((short)rowCount);
-        //    tranToSystemEndian(tempBytes);
-        //    tempBytes = BitConverter.GetBytes((byte)colCount);
+            ///Write first table.
+            int rowCount = tableOfTableAttr.Count;
+            if (rowCount == 0) throw new ArgumentException("Table for target table attribute is empty.");
+            int colCount = tableOfTableAttr[0].Count;
+            if (colCount == 0) throw new ArgumentException("Table for target table attribute is empty.");
+            //row count write to 2 bytes and col count write to 1 byte.
+            byte[] tempBytes = BitConverter.GetBytes((short)rowCount);
+            tranToBigEndian(tempBytes);
+            resultList.AddRange(tempBytes);
+            tempBytes = BitConverter.GetBytes((byte)colCount);
+            tranToBigEndian(tempBytes);
+            resultList.AddRange(tempBytes);
 
-            
-            
-        //}
+            //write table name.
+            if (tableOfTableAttr[0][0] == null) throw new ArgumentException("Table name don't exist.");
+            string tableName = tableOfTableAttr[0][0].ToString();
+            byte[] stringTempBytes = System.Text.Encoding.ASCII.GetBytes(tableName);
+            if (stringTempBytes.Length > byte.MaxValue) throw new ArgumentException("Table name length exceed limit " + byte.MaxValue + ".");
+            //write length of bytes of tableName
+            tempBytes = BitConverter.GetBytes((byte)stringTempBytes.Length);
+            tranToBigEndian(tempBytes);
+            resultList.AddRange(tempBytes);
+            //continue write table name.
+            resultList.AddRange(stringTempBytes);
+            ///End write first table.
 
-        
+            ///Write second table.
+            rowCount = tableOfColumnAttr.Count;
+            if (rowCount == 0) throw new ArgumentException("Table for target table columns attributes is empty.");
+            colCount = tableOfColumnAttr[0].Count;
+            if (colCount == 0) throw new ArgumentException("Table for target table columns attributes is empty.");
+            //row count write to 2 bytes and col count write to 1 byte.
+            tempBytes = BitConverter.GetBytes((short)rowCount);
+            tranToBigEndian(tempBytes);
+            resultList.AddRange(tempBytes);
+            tempBytes = BitConverter.GetBytes((byte)colCount);
+            tranToBigEndian(tempBytes);
+            resultList.AddRange(tempBytes);
+
+            int[] typeIds = new int[rowCount];
+            for (int i = 0; i < rowCount; ++i)
+            {
+                //first column of this table storage column name of target table. its type is char[].
+                if (tableOfColumnAttr[i][0] == null) throw new ArgumentException("Column name don't exist.");
+                tableName = tableOfColumnAttr[i][0].ToString();
+                stringTempBytes = System.Text.Encoding.ASCII.GetBytes(tableName);
+                if (stringTempBytes.Length > byte.MaxValue) throw new ArgumentException("Column name length exceed limit " + byte.MaxValue + ".");
+                //write length of bytes of column name, it is stored in one byte.
+                tempBytes = BitConverter.GetBytes((byte)stringTempBytes.Length);
+                tranToBigEndian(tempBytes);
+                resultList.AddRange(tempBytes);
+                //continue write column name.
+                resultList.AddRange(stringTempBytes);
+
+                //second column of this table store column type name of target table.
+                if (tableOfColumnAttr[i][1] == null) throw new ArgumentException("Column type don't exist.");
+                string colTypeName = tableOfColumnAttr[i][1].ToString();
+                int typeId = Array.FindIndex(CellType.TypeNames, s => s.Equals(colTypeName));
+                if (typeId < 0) throw new ArgumentException("Column type name specified don't exist.");
+                typeIds[i] = typeId;
+                //write type id.
+                CellIO.Write(CellType.TypeId.Int_Value, typeId);
+
+                //thrid column of this table store column description of target table. its type is unicode string.
+                string columnDes;
+                if (tableOfColumnAttr[i][2] != null)
+                {
+                    columnDes = tableOfColumnAttr[i][2].ToString();
+                }
+                else
+                {
+                    columnDes = "";
+                }
+                stringTempBytes = System.Text.Encoding.UTF8.GetBytes(columnDes);
+                int maxLength = 2 * byte.MaxValue;
+                if (stringTempBytes.Length > maxLength) throw new ArgumentException("Column description length exceed limit " + maxLength + ".");
+                //write length of bytes of description, it is stored in two bytes.
+                tempBytes = BitConverter.GetBytes((short)stringTempBytes.Length);
+                tranToBigEndian(tempBytes);
+                resultList.AddRange(tempBytes);
+                //continue write description to bytes
+                resultList.AddRange(stringTempBytes);
+                ///End write second table.
+
+                ///Write third table. it is real target table.
+                rowCount = table.Count;
+                if (rowCount == 0) throw new ArgumentException("Target table is empty.");
+                colCount = table[0].Count;
+                if (colCount == 0) throw new ArgumentException("Target table is empty.");
+                //The valid columns of target table should match the rows of second table.
+                if (colCount > typeIds.Length) colCount = typeIds.Length;
+                //row count write to 2 bytes and col count write to 1 byte.
+                tempBytes = BitConverter.GetBytes((short)rowCount);
+                tranToBigEndian(tempBytes);
+                resultList.AddRange(tempBytes);
+                tempBytes = BitConverter.GetBytes((byte)colCount);
+                tranToBigEndian(tempBytes);
+                resultList.AddRange(tempBytes);
+
+                for (i = 0; i < rowCount; ++i)
+                {
+                    for (int j = 0; j < colCount; ++j)
+                    {
+                        typeId = typeIds[j];
+                        if (typeId == (int)CellType.TypeId.CharStr_Value ||
+                            typeId == (int)CellType.TypeId.UnicodeStr_Value)
+                        {
+                            string strContent;
+                            if(table[i][j] != null)
+                            {
+                                strContent = table[i][j].ToString();
+                            }
+                            else
+                            {
+                                strContent = "";
+                            }
+                            if(typeId == (int)CellType.TypeId.CharStr_Value)
+                            {
+                                stringTempBytes = System.Text.Encoding.ASCII.GetBytes(columnDes);
+                                maxLength = byte.MaxValue;
+                                if (stringTempBytes.Length > maxLength) throw new ArgumentException("Length of cell char[] content of table exceed limit " + maxLength + ".");
+                                //write length of bytes of description, it is stored in one bytes.
+                                tempBytes = BitConverter.GetBytes((byte)stringTempBytes.Length);
+                                tranToBigEndian(tempBytes);
+                                resultList.AddRange(tempBytes);
+                                //continue write description to bytes
+                                resultList.AddRange(stringTempBytes);
+                            }
+                            else
+                            {
+                                stringTempBytes = System.Text.Encoding.UTF8.GetBytes(columnDes);
+                                maxLength = byte.MaxValue * 2;
+                                if (stringTempBytes.Length > maxLength) throw new ArgumentException("Length of cell unicode string content of table exceed limit " + maxLength + ".");
+                                //write length of bytes of description, it is stored in one bytes.
+                                tempBytes = BitConverter.GetBytes((short)stringTempBytes.Length);
+                                tranToBigEndian(tempBytes);
+                                resultList.AddRange(tempBytes);
+                                //continue write description to bytes
+                                resultList.AddRange(stringTempBytes);
+                            }
+                        }
+                        else if(typeId == (int)CellType.TypeId.Int_Value ||
+                            typeId == (int)CellType.TypeId.Float_Value ||
+                            typeId == (int)CellType.TypeId.Double_Value)
+                        {
+                            object content;
+                            if(typeId == (int)CellType.TypeId.Int_Value)
+                            {
+                                content = Convert.ToInt32(table[i][j]);
+                            }
+                            else if(typeId == (int)CellType.TypeId.Float_Value)
+                            {
+                                content = Convert.ToSingle(table[i][j]);
+                            }
+                            else
+                            {
+                                content = Convert.ToDouble(table[i][j]);
+                            }
+                            resultList.AddRange(CellIO.Write((CellType.TypeId)typeId, content));
+                        }
+                        else if(typeId == (int)CellType.TypeId.Bool_Value)
+                        {
+                            bool content = Convert.ToBoolean(table[i][j]);
+                            resultList.AddRange(CellIO.Write((CellType.TypeId)typeId, content));
+                        }
+                        else  //null type
+                        {
+                            //no write bytes.
+                        }
+                    }
+                }
+            }
+            return resultList.ToArray();
+        }
+
         private static void tranToSystemEndian(byte[] bytes)
+        {
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(bytes);
+        }
+
+        private static void tranToBigEndian(byte[] bytes)
         {
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(bytes);
