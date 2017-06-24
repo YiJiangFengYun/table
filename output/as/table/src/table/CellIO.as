@@ -22,6 +22,7 @@ package table
         {
             byteArray.endian = Endian.BIG_ENDIAN;
             byteArray.position = startPos;
+            if(length == 0)length = byteArray.length;
             switch(id)
             {
                 case CellType.null_value:
