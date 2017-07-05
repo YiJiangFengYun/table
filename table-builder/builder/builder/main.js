@@ -36,34 +36,29 @@ builder.registerExstension = function (extension) {
 //    tableDir
 //    isRecursive
 builder.build = function (option, cb) {
-    builder._buildProto(function (err) {
+    builder._buildCommonProto(function (err) {
         if (err) {
             cb(err);
             return;
         }
 
-        builder._parseTables(option, function (err) {
-            if (err) {
-                cb(err);
-                return;
-            }
-
-            builder._check(function (err) {
+        builder._parseTables(option, function (tablesOfTable, cb) {
+            builder._buildTable(tablesOfTable, function (err) {
                 if (err) {
                     cb(err);
                     return;
                 }
 
-                builder._generateBin(function (err) {
-                    if (err) {
-                        cb(err);
-                        return;
-                    }
-
-                    cb();
-                });
-
+                cb();
             });
+        }, function (err) {
+            if (err) {
+                cb(err);
+                return;
+            }
+
+            //complete build tables work
+            cb();
         });
     });
     
@@ -106,17 +101,16 @@ builder._initEnv = function (cb) {
     });
 }
 
-//build dynamic proto file, run protoc application to generate proto code for difference languages.
-builder._buildProto = function (cb) {
+//build common dynamic proto file, run protoc application to generate proto code for difference languages.
+builder._buildCommonProto = function (cb) {
     cb();
 }
 
 //load excel table files in specific location, parse they to data arrays.
-//then create table objects with these data arrays and proto.
 //option:
 //    tableDir
 //    isRecursive
-builder._parseTables = function (option, cb) {
+builder._parseTables = function (option, eachCb, cb) {
     var tableDir = option.tableDir;
     if (!tableDir) {
         cb("Please specify the table directory for searching tables.");
@@ -140,7 +134,19 @@ builder._parseTables = function (option, cb) {
                 excelPath: filePath
             }, function (err, result) {
                 console.log("complete excel build.");
-                doneCb(err);
+                if (err) {
+                    doneCb(err);
+                    return;
+                }
+
+                if (result.isComplete == false) {
+                    doneCb(result.msg);
+                    return;
+                }
+
+                eachCb(result.tables, function (err) {
+                    doneCb(err);
+                });
             });
         }
         else {
@@ -151,12 +157,51 @@ builder._parseTables = function (option, cb) {
     });
 }
 
-//table js objects check
-builder._check = function (option, cb) {
+
+builder._buildTable = function (tablesOfTable, cb) {
+    builder._buildTableProto(tablesOfTable, function (err) {
+        if (err) {
+            cb(err);
+            return;
+        }
+
+        builder._createTableObjs(tablesOfTable, function (err) {
+            if (err) {
+                cb(err);
+                return;
+            }
+
+            builder._checkTable(function (err) {
+                if (err) {
+                    cb(err);
+                    return;
+                }
+
+                builder._generateTableBin(function (err) {
+                    cb(err);
+                });
+            });
+
+        })
+    })
+}
+
+//build table dynamic proto file, run protoc application to generate proto code for difference languages.
+builder._buildTableProto = function (tablesOfTable, cb) {
     cb();
 }
 
-builder._generateBin = function (cb) {
+//generate table js objects
+builder._createTableObjs = function (tablesOfTable, cb) {
+    cb();
+}
+
+//table js objects check
+builder._checkTable = function (cb) {
+    cb();
+}
+
+builder._generateTableBin = function (cb) {
     cb();
 }
 
