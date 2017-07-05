@@ -2,20 +2,20 @@
 
 build work flow:
 
-       build table common proto(use tablejs's buildCommonProto) <-----   extensions
-           |
-           | (build --> dynamic protos --> table common binary io proto libraries)
-           |
-           V
+	   build table common proto(use tablejs's buildCommonProto) <-----   extensions
+		   |
+		   | (build --> dynamic protos --> table common binary io proto libraries)
+		   |
+		   V
 	   load tables and parse tables to arrays (use tablejs's parseTables)
-	       |
+		   |
 		   |
 		   |
 		   V
 	   _________________________	   
 	   for each table (use tablejs's buildTable): 
-	             build table proto (use tablejs's buildTableProto) 
-    			   |
+				 build table proto (use tablejs's buildTableProto) 
+				   |
 				   |
 				   |
 				   V
@@ -32,7 +32,7 @@ build work flow:
 				 generate table binary file with js objects, js proto and protoc execution (use tablejs's generateTableBin)
 	   __________________________
 	   
-	       |
+		   |
 		   |
 		   |
 		   V
