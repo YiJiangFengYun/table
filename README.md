@@ -8,7 +8,7 @@ build work flow:
            | (build --> dynamic protos --> table binary io proto libraries)
            |
            V
-       tables make table js objects with js proto (use tablejs's parseTables)
+       tables generate table js objects with js proto (use tablejs's parseTables)
            |
            |
            V
@@ -18,5 +18,5 @@ build work flow:
            |
            |
            V
-       table js objects make table binary files with js proto
+       table js objects generate table binary files with js proto (use tablejs's generateBin)
 

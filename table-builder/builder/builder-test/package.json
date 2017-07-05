@@ -1,0 +1,9 @@
+{
+  "name": "table-builder-test",
+  "version": "0.0.0",
+  "description": "table builder test",
+  "main": "app.js",
+  "author": {
+    "name": "YiJiangFengYun"
+  }
+}

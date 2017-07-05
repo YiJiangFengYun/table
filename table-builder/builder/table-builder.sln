@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "table-builder", "builder\table-builder.njsproj", "{56529AEF-12B4-4620-B13C-9A98AE5E4E3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "excel-load", "excel-load\excel-load.csproj", "{EDEF63DC-8CC5-43AE-858C-36934B906389}"
+EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "table-builder-test", "builder-test\table-builder-test.njsproj", "{B8109FD1-1982-4534-9FE8-671A6B9C5813}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{56529AEF-12B4-4620-B13C-9A98AE5E4E3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56529AEF-12B4-4620-B13C-9A98AE5E4E3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56529AEF-12B4-4620-B13C-9A98AE5E4E3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56529AEF-12B4-4620-B13C-9A98AE5E4E3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDEF63DC-8CC5-43AE-858C-36934B906389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDEF63DC-8CC5-43AE-858C-36934B906389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDEF63DC-8CC5-43AE-858C-36934B906389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDEF63DC-8CC5-43AE-858C-36934B906389}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8109FD1-1982-4534-9FE8-671A6B9C5813}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8109FD1-1982-4534-9FE8-671A6B9C5813}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8109FD1-1982-4534-9FE8-671A6B9C5813}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8109FD1-1982-4534-9FE8-671A6B9C5813}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
