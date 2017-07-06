@@ -4,10 +4,11 @@
  */
 
 let Base = require("./base");
+let docVersion = require("./documentVersion");
 
 let Syntax = function (name, option) {
     Base.call(this, name, option);
-    this.version = option ? option.syntax || option.version || "proto3" : "proto3";
+    this.version = docVersion.CURR_VERSION === docVersion.VERSION_3 ? "proto3" : "proto2";
 };
 
 Object.assign(Syntax.prototype, Base.prototype, {

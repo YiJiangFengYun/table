@@ -3,14 +3,22 @@
  * Field type of message
  */
 
-let Field = function () {
-    this.isOptional = true;
-    this.isRepeated = false;
+let Base = require("./../base");
 
+let Field = function (name, type, option) {
+    Base.call(this, name, option);
+    this.isRepeated = option ? option.isRepeated || false : false;
+    this.number = option ? option.number || 0 : 0;
+    this.type = type;
 };
 
 Object.assign(Field.prototype, {
-
+    toText: function () {
+        return (this.isRepeated ? "repeated " : "") +
+            this.type.toText() + " " +
+            this.name + " = " +
+            this.number + ";"
+    }
 });
 
 module.exports = Field;

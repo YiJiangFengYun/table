@@ -10,7 +10,7 @@ let Type = function (name, option) {
 
 Object.assign(Type.prototype, Base.prototype, {
     toText:function () {
-        return "Type";
+        return this.name;
     }
 });
 
