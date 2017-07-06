@@ -1,10 +1,11 @@
 /**
  * Created by YiJiangFengYun on 2017/7/6.
+ * Collecting build in types
  */
 
-var Type = require("./type");
+let Type = require("./type");
 
-var buildInTypeMap = {
+let buildInTypeMap = {
     double: new Type("double"),
     float: new Type("float"),
     int32: new Type("int32"),

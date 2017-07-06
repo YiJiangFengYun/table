@@ -1,9 +1,10 @@
 ﻿/**
  * Created by YiJiangFengYun on 2017/7/6.
+ * Base Type for message filed.
  */
-var Base = require("../base");
+let Base = require("../base");
 
-var Type = function (name, option) {
+let Type = function (name, option) {
     Base.call(this, name, option);
 };
 

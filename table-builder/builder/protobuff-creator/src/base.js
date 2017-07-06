@@ -1,8 +1,9 @@
 /**
  * Created by YiJiangFengYun on 2017/7/6.
+ * Base Type
  */
 
-var Base = function (name, option) {
+let Base = function (name, option) {
     this.name = name;
     if (option) {
     }

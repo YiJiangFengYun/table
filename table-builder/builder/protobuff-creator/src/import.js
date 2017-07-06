@@ -1,10 +1,11 @@
 /**
  * Created by YiJiangFengYun on 2017/7/6.
+ * Import Type
  */
 
-var Base = require("./base");
+let Base = require("./base");
 
-var Import = function (name, definition, option) {
+let Import = function (name, definition, option) {
     Base.call(this, name, option);
     this.mode = option ? option.mode || "" : "";
     this.definition = definition;

@@ -1,9 +1,10 @@
 ﻿/**
  * Created by YiJiangFengYun on 2017/7/6.
+ * Document Type
  */
-var Base = require("./base");
+let Base = require("./base");
 
-var ProtoBuffDoc = function (name, option) {
+let ProtoBuffDoc = function (name, option) {
     Base.call(this, name, option);
     this.syntax = option && option.syntax ? option.syntax : "proto3";
     this.package = option && option.package ? option.package : "";
