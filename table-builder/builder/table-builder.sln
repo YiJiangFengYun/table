@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "excel-load", "excel-load\ex
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "table-builder-test", "builder-test\table-builder-test.njsproj", "{B8109FD1-1982-4534-9FE8-671A6B9C5813}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "protobuff-creator", "protobuff-creator\protobuff-creator.njsproj", "{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{B8109FD1-1982-4534-9FE8-671A6B9C5813}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8109FD1-1982-4534-9FE8-671A6B9C5813}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8109FD1-1982-4534-9FE8-671A6B9C5813}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

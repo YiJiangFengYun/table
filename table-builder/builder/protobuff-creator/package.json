@@ -2,7 +2,7 @@
   "name": "protobuff-creator",
   "version": "0.0.1",
   "description": "create dynamic protobuff objects and ouput protobuff file content at runtime.",
-  "main": "app.js",
+  "main": "index.js",
   "author": {
     "name": "YiJiangFengYun"
   }
