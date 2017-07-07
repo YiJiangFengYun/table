@@ -19,7 +19,16 @@ Object.assign(Enum.prototype, Type.prototype, {
         fields.push(newField);
     },
     toText: function () {
-        //todo
+        let result = "enum " + this.name + " { ";
+        let fields = this.fields;
+        let len = fields.length;
+        let i;
+        for(i = 0; i < len; ++i)
+        {
+            result += fields[i].name + " = " + fields[i].number + ";";
+        }
+        result += " }";
+        return result;
     }
 });
 

@@ -12,7 +12,7 @@ let Field = function (name, type, option) {
     this.type = type;
 };
 
-Object.assign(Field.prototype, {
+Object.assign(Field.prototype, Base.prototype, {
     toText: function () {
         return (this.isRepeated ? "repeated " : "") +
             this.type.toText() + " " +
