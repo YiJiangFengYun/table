@@ -1,6 +1,5 @@
 'use strict';
-
-var builder = require("./../builder");
+let builder = require("./../builder");
 
 builder.init(function (err) {
     if (err) {

@@ -5,6 +5,5 @@
 
 module.exports = {
     VERSION_2: 2,
-    VERSION_3: 3,
-    currVersion: 2
+    VERSION_3: 3
 };

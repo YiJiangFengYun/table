@@ -12,13 +12,14 @@ let Field = function (name, type, option) {
     this.type = type;
 };
 
-Object.assign(Field.prototype, Base.prototype, {
-    toText: function () {
-        return (this.isRepeated ? "repeated " : "") +
-            this.type.toText() + " " +
-            this.name + " = " +
-            this.number + ";"
-    }
-});
+Field.prototype = Object.create(Base.prototype);
+Field.prototype.constructor = Field;
+
+Field.prototype.toText = function () {
+    return (this.isRepeated ? "repeated " : "") +
+        this.type.toText() + " " +
+        this.name + " = " +
+        this.number + ";"
+};
 
 module.exports = Field;

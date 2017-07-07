@@ -10,10 +10,11 @@ let EnumField = function (name, option) {
     this.number = option ? option.number || 0 : 0;
 };
 
-Object.assign(EnumField.prototype, Base.prototype, {
-    toText: function () {
-        return this.name + " = " + this.number + ";"
-    }
-});
+EnumField.prototype = Object.create(Base.prototype);
+EnumField.prototype.constructor = EnumField;
+
+EnumField.toText = function () {
+    return this.name + " = " + this.number + ";"
+};
 
 module.exports = EnumField;

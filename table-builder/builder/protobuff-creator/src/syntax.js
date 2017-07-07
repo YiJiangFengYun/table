@@ -8,11 +8,14 @@ let docVersion = require("./documentVersion");
 
 let Syntax = function (name, option) {
     Base.call(this, name, option);
-    this.version = docVersion.currVersion === docVersion.VERSION_3 ? "proto3" : "proto2";
+    this.version = option.version === docVersion.VERSION_2 ? "proto2" : "proto3";
 };
 
-Object.assign(Syntax.prototype, Base.prototype, {
-    toText:function () {
-        return "syntax = \"" + this.version + "\";" ;
-    }
-});
+Syntax.prototype = Object.create(Base.prototype);
+Syntax.prototype.constructor = Syntax;
+
+Syntax.prototype.toText = function () {
+    return "syntax = \"" + this.version + "\";";
+};
+
+module.exports = Syntax;

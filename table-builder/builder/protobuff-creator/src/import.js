@@ -11,14 +11,15 @@ let Import = function (name, definition, option) {
     this.definition = definition;
 };
 
-Object.assign(Import.prototype, Base.prototype, {
-    toText: function () {
-        if (!this.definition) throw new Error("The definition is invalid in Import.");
-        return "import " +
-            (this.mode && this.mode !== "" ? this.mode + " " : "") +
-            this.definition +
-            ";";
-    }
-});
+Import.prototype = Object.create(Base.prototype);
+Import.prototype.constructor = Import;
+
+Import.prototype.toText = function () {
+    if (!this.definition) throw new Error("The definition is invalid in Import.");
+    return "import " +
+        (this.mode && this.mode !== "" ? this.mode + " " : "") +
+        this.definition +
+        ";";
+};
 
 module.exports = Import;

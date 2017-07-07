@@ -11,25 +11,27 @@ let Enum = function (name, option) {
     this.fields = [];
 };
 
-Object.assign(Enum.prototype, Type.prototype, {
-    addField: function (fieldName, fieldOption) {
-        let newField = new EnumField(fieldName, fieldOption);
-        let fields = this.fields;
-        newField.number = fields.length; //start from 0.
-        fields.push(newField);
-    },
-    toText: function () {
-        let result = "enum " + this.name + " { ";
-        let fields = this.fields;
-        let len = fields.length;
-        let i;
-        for(i = 0; i < len; ++i)
-        {
-            result += fields[i].name + " = " + fields[i].number + ";";
-        }
-        result += " }";
-        return result;
+Enum.prototype = Object.create(Type.prototype);
+Enum.prototype.constructor = Enum;
+
+Enum.prototype.addField = function (fieldName, fieldOption) {
+    let newField = new EnumField(fieldName, fieldOption);
+    let fields = this.fields;
+    newField.number = fields.length; //start from 0.
+    fields.push(newField);
+};
+
+Enum.prototype.toText = function () {
+    let result = "enum " + this.name + " { ";
+    let fields = this.fields;
+    let len = fields.length;
+    let i;
+    for(i = 0; i < len; ++i)
+    {
+        result += fields[i].name + " = " + fields[i].number + ";";
     }
-});
+    result += " }";
+    return result;
+};
 
 module.exports = Enum;

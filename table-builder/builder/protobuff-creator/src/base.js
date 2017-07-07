@@ -9,10 +9,8 @@ let Base = function (name, option) {
     }
 };
 
-Object.assign(Base.prototype, {
-    toText: function () {
-        return "Base";
-    }
-});
+Base.prototype.toText = function () {
+    return "Base";
+};
 
 module.exports = Base;
