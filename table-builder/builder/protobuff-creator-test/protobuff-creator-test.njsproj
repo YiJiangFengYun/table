@@ -2,16 +2,16 @@
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <Name>protobuff-creator</Name>
-    <RootNamespace>protobuff-creator</RootNamespace>
+    <Name>protobuff-creator-test</Name>
+    <RootNamespace>protobuff-creator-test</RootNamespace>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>67d3fcd6-eb6b-4825-9f76-1b91c5ce1f46</ProjectGuid>
+    <ProjectGuid>b6896a18-be79-4b10-88c8-96d5d370093e</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>index.js</StartupFile>
+    <StartupFile>app.js</StartupFile>
     <StartWebBrowser>False</StartWebBrowser>
     <SearchPath>
     </SearchPath>
@@ -28,25 +28,11 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="index.js" />
-    <Compile Include="protobuffCreator\base.js" />
-    <Compile Include="protobuffCreator\document.js" />
-    <Compile Include="protobuffCreator\documentVersion.js" />
-    <Compile Include="protobuffCreator\import.js" />
-    <Compile Include="protobuffCreator\package.js" />
-    <Compile Include="protobuffCreator\syntax.js" />
-    <Compile Include="protobuffCreator\types\buildInTypes.js" />
-    <Compile Include="protobuffCreator\types\enum.js" />
-    <Compile Include="protobuffCreator\types\enumField.js" />
-    <Compile Include="protobuffCreator\types\field.js" />
-    <Compile Include="protobuffCreator\types\message.js" />
-    <Compile Include="protobuffCreator\types\type.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="protobuffCreator\" />
-    <Folder Include="protobuffCreator\types\" />
+    <Compile Include="index.js" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />

@@ -11,6 +11,8 @@ Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "table-builder-test", "build
 EndProject
 Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "protobuff-creator", "protobuff-creator\protobuff-creator.njsproj", "{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}"
 EndProject
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "protobuff-creator-test", "protobuff-creator-test\protobuff-creator-test.njsproj", "{B6896A18-BE79-4B10-88C8-96D5D370093E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67D3FCD6-EB6B-4825-9F76-1B91C5CE1F46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6896A18-BE79-4B10-88C8-96D5D370093E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6896A18-BE79-4B10-88C8-96D5D370093E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6896A18-BE79-4B10-88C8-96D5D370093E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6896A18-BE79-4B10-88C8-96D5D370093E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
