@@ -10,8 +10,8 @@ let Base = require("./../base");
  * @param {string} name
  * @param {object?} option
  *
- * @class
  * @constructor
+ * @instance
  */
 let EnumField = function (name, option) {
     Base.call(this, name, option);
@@ -26,6 +26,7 @@ EnumField.prototype.constructor = EnumField;
  * @return {string}
  *
  * @memberOf EnumField
+ * @instance
  */
 EnumField.toText = function () {
     return this.name + " = " + this.number + ";"

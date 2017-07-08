@@ -6,13 +6,13 @@ let documentVersion = require("./protobuffCreator/documentVersion");
 let Document = require("./protobuffCreator/document");
 
 /**
- *
  * @type {{docVersion: {VERSION_2:number, VERSION_3:number}, createDoc: function(string, number, string, object?):Document}}
  */
 module.exports = {
     docVersion: documentVersion,
     createDoc: function (name, version, packageName, option) {
-        return new Document(name, version, packageName, option);
+        var doc = new Document(name, version, packageName, option);
+        return doc;
     }
 };
 

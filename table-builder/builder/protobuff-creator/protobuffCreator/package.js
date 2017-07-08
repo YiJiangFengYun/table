@@ -10,7 +10,6 @@ let Base = require("./base");
  * @param {string} name
  * @param {object?} option
  *
- * @class
  * @constructor
  */
 let Package = function (name, option) {
@@ -25,6 +24,7 @@ Package.prototype.constructor = Package;
  * @return {string}
  *
  * @memberOf Package
+ * @instance
  */
 Package.prototype.toText = function () {
     return "package " + this.name;

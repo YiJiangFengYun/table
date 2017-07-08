@@ -5,7 +5,7 @@
 
 /**
  * Base type
- * @class
+ *
  * @constructor
  */
 let Base = function (name, option) {
@@ -19,6 +19,7 @@ let Base = function (name, option) {
  * @return {string}
  *
  * @memberOf Base
+ * @instance
  */
 Base.prototype.toText = function () {
     return "Base";

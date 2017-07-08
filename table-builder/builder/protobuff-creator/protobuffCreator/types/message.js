@@ -11,7 +11,6 @@ let Field = require("./field");
  * @param {string} name
  * @param {object?} option
  *
- * @class
  * @constructor
  */
 let Message = function (name, option) {
@@ -29,6 +28,7 @@ Message.prototype.constructor = Message;
  * @param {object?} fieldOption
  *
  * @memberOf Message
+ * @instance
  */
 Message.prototype.addField = function (fieldName, fieldType, fieldOption) {
     let newField = new Field(fieldName, fieldType, fieldOption);
@@ -42,6 +42,7 @@ Message.prototype.addField = function (fieldName, fieldType, fieldOption) {
  * @return {string}
  *
  * @memberOf Message
+ * @instance
  */
 Message.prototype.toText = function () {
     let result = "message " + this.name + " { ";

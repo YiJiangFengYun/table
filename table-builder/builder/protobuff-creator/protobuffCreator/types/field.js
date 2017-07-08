@@ -11,7 +11,6 @@ let Base = require("./../base");
  * @param {Type} type
  * @param {object?} option
  *
- * @class
  * @constructor
  */
 let Field = function (name, type, option) {
@@ -29,6 +28,7 @@ Field.prototype.constructor = Field;
  * @return {string}
  *
  * @memberOf Field
+ * @instance
  */
 Field.prototype.toText = function () {
     return (this.isRepeated ? "repeated " : "") +

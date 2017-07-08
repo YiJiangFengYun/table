@@ -11,7 +11,6 @@ let Base = require("./base");
  * @param {string} definition File name for definitions
  * @param {object?} option
  *
- * @class
  * @constructor
  */
 let Import = function (name, definition, option) {
@@ -28,6 +27,7 @@ Import.prototype.constructor = Import;
  * @return {string}
  *
  * @memberOf Import
+ * @instance
  */
 Import.prototype.toText = function () {
     if (!this.definition) throw new Error("The definition is invalid in Import.");

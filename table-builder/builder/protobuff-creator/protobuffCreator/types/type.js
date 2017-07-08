@@ -9,7 +9,6 @@ let Base = require("./../base");
  * @param {string} name
  * @param {object?} option
  *
- * @class
  * @constructor
  */
 let Type = function (name, option) {
@@ -23,6 +22,7 @@ Type.prototype.constructor = Type;
  * @return {string}
  *
  * @memberOf Type
+ * @instance
  */
 Type.prototype. toText = function () {
     return this.name;

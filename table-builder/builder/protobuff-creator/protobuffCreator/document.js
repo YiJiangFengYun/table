@@ -14,7 +14,6 @@ let docVersion = require("./documentVersion");
  * @param {string} packageName
  * @param {object?} option
  *
- * @class
  * @constructor
  */
 let Document = function (name, version, packageName, option) {
@@ -32,6 +31,7 @@ Document.prototype.constructor = Document;
 
 /**
  * @memberOf Document
+ * @instance
  */
 Document.prototype.dispose = function () {
     this.syntax = null;
@@ -49,6 +49,7 @@ Document.prototype.dispose = function () {
  * @return {string}
  *
  * @memberOf Document
+ * @instance
  */
 Document.prototype.toText = function () {
     let resultStr = "";
@@ -91,6 +92,7 @@ Document.prototype.toText = function () {
  * @param {Import} newImport
  *
  * @memberOf Document
+ * @instance
  */
 Document.prototype.addImport = function (newImport) {
     let imports = this.imports;
@@ -103,6 +105,7 @@ Document.prototype.addImport = function (newImport) {
  * @param {Import} removeImport
  *
  * @memberOf Document
+ * @instance
  */
 Document.prototype.removeImport = function (removeImport) {
     let imports = this.imports;
@@ -115,6 +118,7 @@ Document.prototype.removeImport = function (removeImport) {
  * @param {Enum} newEnum
  *
  * @memberOf Document
+ * @instance
  */
 Document.prototype.addEnum = function (newEnum) {
     let enums = this.enums;
@@ -127,6 +131,7 @@ Document.prototype.addEnum = function (newEnum) {
  * @param {Enum} removeEnum
  *
  * @memberOf Document
+ * @instance
  */
 Document.prototype.removeEnum = function (removeEnum) {
     let enums = this.enums;
@@ -139,6 +144,7 @@ Document.prototype.removeEnum = function (removeEnum) {
  * @param {Message} newMessage
  *
  * @memberOf Document
+ * @instance
  */
 Document.prototype.addMessage = function (newMessage) {
     let messages = this.messages;
@@ -148,9 +154,10 @@ Document.prototype.addMessage = function (newMessage) {
 
 /**
  * Remove Message type
- * @param removeMessage
+ * @param {Message} removeMessage
  *
  * @memberOf Document
+ * @instance
  */
 Document.prototype.removeMessage = function (removeMessage) {
     let messages = this.messages;

@@ -11,7 +11,6 @@ let docVersion = require("./documentVersion");
  * @param {string} name
  * @param {object?} option
  *
- * @class
  * @constructor
  */
 let Syntax = function (name, option) {
@@ -27,6 +26,7 @@ Syntax.prototype.constructor = Syntax;
  * @return {string}
  *
  * @memberOf Syntax
+ * @instance
  */
 Syntax.prototype.toText = function () {
     return "syntax = \"" + this.version + "\";";

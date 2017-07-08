@@ -11,7 +11,6 @@ let EnumField = require("./enumField");
  * @param name  enum name
  * @param option enum option
  *
- * @class
  * @constructor
  */
 let Enum = function (name, option) {
@@ -28,6 +27,7 @@ Enum.prototype.constructor = Enum;
  * @param {object?} fieldOption
  *
  * @memberOf Enum
+ * @instance
  */
 Enum.prototype.addField = function (fieldName, fieldOption) {
     let newField = new EnumField(fieldName, fieldOption);
@@ -41,6 +41,7 @@ Enum.prototype.addField = function (fieldName, fieldOption) {
  * @return {string}
  *
  * @memberOf Enum
+ * @instance
  */
 Enum.prototype.toText = function () {
     let result = "enum " + this.name + " { ";
