@@ -5,5 +5,8 @@
   "main": "index.js",
   "author": {
     "name": "YiJiangFengYun"
+  },
+  "dependencies": {
+    "enum": "^2.4.0"
   }
 }

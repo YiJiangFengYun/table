@@ -4,6 +4,14 @@
  */
 let Base = require("./../base");
 
+/**
+ * Proto buff type
+ * @param {string} name
+ * @param {object?} option
+ *
+ * @class
+ * @constructor
+ */
 let Type = function (name, option) {
     Base.call(this, name, option);
 };
@@ -11,6 +19,11 @@ let Type = function (name, option) {
 Type.prototype = Object.create(Base.prototype);
 Type.prototype.constructor = Type;
 
+/**
+ * @return {string}
+ *
+ * @memberOf Type
+ */
 Type.prototype. toText = function () {
     return this.name;
 };

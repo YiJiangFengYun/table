@@ -5,6 +5,14 @@
 
 let Base = require("./base");
 
+/**
+ * Package type
+ * @param {string} name
+ * @param {object?} option
+ *
+ * @class
+ * @constructor
+ */
 let Package = function (name, option) {
     Base.call(this, name, option);
 };
@@ -12,6 +20,12 @@ let Package = function (name, option) {
 Package.prototype = Object.create(Base.prototype);
 Package.prototype.constructor = Package;
 
+/**
+ * create text
+ * @return {string}
+ *
+ * @memberOf Package
+ */
 Package.prototype.toText = function () {
     return "package " + this.name;
 };

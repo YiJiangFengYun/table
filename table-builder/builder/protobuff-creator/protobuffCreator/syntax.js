@@ -6,6 +6,14 @@
 let Base = require("./base");
 let docVersion = require("./documentVersion");
 
+/**
+ * Syntax type
+ * @param {string} name
+ * @param {object?} option
+ *
+ * @class
+ * @constructor
+ */
 let Syntax = function (name, option) {
     Base.call(this, name, option);
     this.version = option.version === docVersion.VERSION_2 ? "proto2" : "proto3";
@@ -14,6 +22,12 @@ let Syntax = function (name, option) {
 Syntax.prototype = Object.create(Base.prototype);
 Syntax.prototype.constructor = Syntax;
 
+/**
+ * create text
+ * @return {string}
+ *
+ * @memberOf Syntax
+ */
 Syntax.prototype.toText = function () {
     return "syntax = \"" + this.version + "\";";
 };

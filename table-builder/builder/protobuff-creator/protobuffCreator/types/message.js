@@ -6,6 +6,14 @@
 let Type = require("./type");
 let Field = require("./field");
 
+/**
+ *
+ * @param {string} name
+ * @param {object?} option
+ *
+ * @class
+ * @constructor
+ */
 let Message = function (name, option) {
     Type.call(name, option);
     this.fields = [];
@@ -14,6 +22,14 @@ let Message = function (name, option) {
 Message.prototype = Object.create(Type.prototype);
 Message.prototype.constructor = Message;
 
+/**
+ * Add filed to message.
+ * @param {string} fieldName
+ * @param {Type} fieldType
+ * @param {object?} fieldOption
+ *
+ * @memberOf Message
+ */
 Message.prototype.addField = function (fieldName, fieldType, fieldOption) {
     let newField = new Field(fieldName, fieldType, fieldOption);
     let fields = this.fields;
@@ -21,6 +37,12 @@ Message.prototype.addField = function (fieldName, fieldType, fieldOption) {
     fields.push(newField);
 };
 
+/**
+ * create text
+ * @return {string}
+ *
+ * @memberOf Message
+ */
 Message.prototype.toText = function () {
     let result = "message " + this.name + " { ";
     let fields = this.fields;

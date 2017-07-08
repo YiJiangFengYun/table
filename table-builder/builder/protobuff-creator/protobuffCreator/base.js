@@ -3,12 +3,23 @@
  * Base Type
  */
 
+/**
+ * Base type
+ * @class
+ * @constructor
+ */
 let Base = function (name, option) {
     this.name = name;
     if (option) {
     }
 };
 
+/**
+ *
+ * @return {string}
+ *
+ * @memberOf Base
+ */
 Base.prototype.toText = function () {
     return "Base";
 };
