@@ -18,11 +18,33 @@ let docVersion = require("./documentVersion");
  */
 let Document = function (name, version, packageName, option) {
     Base.call(this, name, option);
+    /**
+     * @member {number}
+     */
     this.version = version || docVersion.VERSION_3;
+    /**
+     *
+     * @member {Syntax}
+     */
     this.syntax = new Syntax("documentSyntax", {version: this.version});
+    /**
+     *
+     * @member {Package}
+     */
     this.package = new Package(packageName);
+    /**
+     *
+     * @member {array.<Import>}
+     */
     this.imports = [];
+    /**
+     *
+     * @member {array.<Import>}
+     */
     this.enums = [];
+    /**
+     * @member {Array.<Message>}
+     */
     this.messages = [];
 };
 
@@ -34,14 +56,9 @@ Document.prototype.constructor = Document;
  * @instance
  */
 Document.prototype.dispose = function () {
-    this.syntax = null;
-    this.package = null;
     this.imports.length = 0;
-    this.imports = null;
     this.enums.length = 0;
-    this.enums = null;
     this.messages.length = 0;
-    this.messages = null;
 };
 
 /**
