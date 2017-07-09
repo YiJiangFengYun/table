@@ -13,10 +13,9 @@ let Base = require("./base");
  *
  * @constructor
  */
-let Import = function (name, definition, option) {
+let Import = function (name, option) {
     Base.call(this, name, option);
     this.mode = option ? option.mode || "" : "";
-    this.definition = definition;
 };
 
 Import.prototype = Object.create(Base.prototype);
@@ -31,10 +30,9 @@ Import.prototype.constructor = Import;
  * @instance
  */
 Import.prototype.toText = function (option) {
-    if (!this.definition) throw new Error("The definition is invalid in Import.");
     return "import " +
         (this.mode && this.mode !== "" ? this.mode + " " : "") +
-        this.definition +
+        this.name +
         ";";
 };
 

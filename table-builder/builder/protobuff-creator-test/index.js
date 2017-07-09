@@ -10,6 +10,8 @@ let doc = protobuffCreator.createDoc("protobuff-creator-test",
     "test",
     {isFormat: true});
 
+// let import1 = protobuffCreator.createImport("testExt")
+
 console.log("document to text: ");
 console.log(doc.toText());
 
