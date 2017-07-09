@@ -5,4 +5,13 @@
 
 let protobuffCreator = require("./../protobuff-creator");
 
-let doc = protobuffCreator.createDoc("protobuff-creator-test", protobuffCreator.docVersion.VERSION_3, "test");
+let doc = protobuffCreator.createDoc("protobuff-creator-test",
+    protobuffCreator.docVersion.VERSION_3,
+    "test",
+    {isFormat: true});
+
+console.log("document to text: " + doc.toText());
+
+doc.dispose();
+
+console.log("process end.");

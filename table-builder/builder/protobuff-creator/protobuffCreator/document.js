@@ -32,6 +32,12 @@ let Document = function (name, version, packageName, option) {
      * @member {Package}
      */
     this.package = new Package(packageName);
+
+    /**
+     *
+     * @member {boolean}
+     */
+    this.isFormat = option && option.isFormat || false;
     /**
      *
      * @member {array.<Import>}
@@ -52,13 +58,23 @@ Document.prototype = Object.create(Base.prototype);
 Document.prototype.constructor = Document;
 
 /**
+ *
+ * @return void
  * @memberOf Document
  * @instance
+ * @method
  */
 Document.prototype.dispose = function () {
     this.imports.length = 0;
     this.enums.length = 0;
     this.messages.length = 0;
+    delete this.version;
+    delete this.syntax;
+    delete this.package;
+    delete this.imports;
+    delete this.enums;
+    delete this.messages;
+
 };
 
 /**
@@ -107,6 +123,7 @@ Document.prototype.toText = function () {
 /**
  * Add import
  * @param {Import} newImport
+ * @return void
  *
  * @memberOf Document
  * @instance
@@ -120,6 +137,7 @@ Document.prototype.addImport = function (newImport) {
 /**
  * Remove import
  * @param {Import} removeImport
+ * @return void
  *
  * @memberOf Document
  * @instance
@@ -133,6 +151,7 @@ Document.prototype.removeImport = function (removeImport) {
 /**
  * Add new Enum type
  * @param {Enum} newEnum
+ * @return void
  *
  * @memberOf Document
  * @instance
@@ -146,6 +165,7 @@ Document.prototype.addEnum = function (newEnum) {
 /**
  *
  * @param {Enum} removeEnum
+ * @return void
  *
  * @memberOf Document
  * @instance
@@ -159,6 +179,7 @@ Document.prototype.removeEnum = function (removeEnum) {
 /**
  * Add new Message type
  * @param {Message} newMessage
+ * @return void
  *
  * @memberOf Document
  * @instance
@@ -172,6 +193,7 @@ Document.prototype.addMessage = function (newMessage) {
 /**
  * Remove Message type
  * @param {Message} removeMessage
+ * @return void
  *
  * @memberOf Document
  * @instance
