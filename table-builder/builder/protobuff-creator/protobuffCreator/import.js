@@ -23,13 +23,14 @@ Import.prototype = Object.create(Base.prototype);
 Import.prototype.constructor = Import;
 
 /**
- * create text
+ * Create text
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Import
  * @instance
  */
-Import.prototype.toText = function () {
+Import.prototype.toText = function (option) {
     if (!this.definition) throw new Error("The definition is invalid in Import.");
     return "import " +
         (this.mode && this.mode !== "" ? this.mode + " " : "") +

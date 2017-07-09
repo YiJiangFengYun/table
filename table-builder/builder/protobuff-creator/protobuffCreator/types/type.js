@@ -19,12 +19,14 @@ Type.prototype = Object.create(Base.prototype);
 Type.prototype.constructor = Type;
 
 /**
+ *
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Type
  * @instance
  */
-Type.prototype. toText = function () {
+Type.prototype. toText = function (option) {
     return this.name;
 };
 

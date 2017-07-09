@@ -22,13 +22,14 @@ Syntax.prototype = Object.create(Base.prototype);
 Syntax.prototype.constructor = Syntax;
 
 /**
- * create text
+ * Create text
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Syntax
  * @instance
  */
-Syntax.prototype.toText = function () {
+Syntax.prototype.toText = function (option) {
     return "syntax = \"" + this.version + "\";";
 };
 

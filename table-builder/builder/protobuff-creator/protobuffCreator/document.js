@@ -19,7 +19,7 @@ let docVersion = require("./documentVersion");
 let Document = function (name, version, packageName, option) {
     Base.call(this, name, option);
     /**
-     * @member {number}
+     * @member {Number}
      */
     this.version = version || docVersion.VERSION_3;
     /**
@@ -35,17 +35,17 @@ let Document = function (name, version, packageName, option) {
 
     /**
      *
-     * @member {boolean}
+     * @member {Boolean}
      */
     this.isFormat = option && option.isFormat || false;
     /**
      *
-     * @member {array.<Import>}
+     * @member {Array.<Import>}
      */
     this.imports = [];
     /**
      *
-     * @member {array.<Import>}
+     * @member {Array.<Import>}
      */
     this.enums = [];
     /**
@@ -79,43 +79,75 @@ Document.prototype.dispose = function () {
 
 /**
  * create text
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Document
  * @instance
  */
-Document.prototype.toText = function () {
+Document.prototype.toText = function (option) {
+    //option isFormat is preferential to member(field) isformat.
+    let isFormat = option && option.isFormat !== undefined ? option.isFormat : this.isFormat;
+    let isNeedNewLine = false;
     let resultStr = "";
     let len;
     let i;
 
     //syntax
-    resultStr += this.syntax.toText();
+    resultStr += this.syntax.toText(option);
+
+    if(isFormat)resultStr += "\n";
 
     //package
-    resultStr += this.package.toText();
+    resultStr += this.package.toText(option);
+    isNeedNewLine = true;
 
     //imports
     let imports = this.imports;
     len = imports.length;
+
+    if(isFormat && isNeedNewLine && len !== 0)
+    {
+        resultStr += "\n";
+        isNeedNewLine = false;
+    }
+
     for (i = 0; i < len; ++i) {
-        resultStr += imports[i].toText();
+        resultStr += imports[i].toText(option);
+        isNeedNewLine = true;
     }
 
     //enums
     let enums = this.enums;
     len = enums.length;
+
+    if(isFormat && isNeedNewLine && len !== 0)
+    {
+        resultStr += "\n"
+        isNeedNewLine = false;
+    }
+
     for (i = 0; i < len; ++i) {
-        resultStr += enums[i].toText();
+        resultStr += enums[i].toText(option);
+        isNeedNewLine = true;
     }
 
     //messages
     let messages = this.messages;
     len = messages.length;
-    for (i = 0; i < len; ++i) {
-        resultStr += messages[i].toText();
+
+    if(isFormat && isNeedNewLine && len !== 0)
+    {
+        resultStr += "\n";
+        isFormat = false;
     }
 
+    for (i = 0; i < len; ++i) {
+        resultStr += messages[i].toText(option);
+        isNeedNewLine = true;
+    }
+
+    isNeedNewLine = false;
     return resultStr;
 
 };

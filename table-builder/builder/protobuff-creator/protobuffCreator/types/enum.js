@@ -38,12 +38,13 @@ Enum.prototype.addField = function (fieldName, fieldOption) {
 
 /**
  *
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Enum
  * @instance
  */
-Enum.prototype.toText = function () {
+Enum.prototype.toText = function (option) {
     let result = "enum " + this.name + " { ";
     let fields = this.fields;
     let len = fields.length;

@@ -23,12 +23,13 @@ EnumField.prototype.constructor = EnumField;
 
 /**
  *
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf EnumField
  * @instance
  */
-EnumField.toText = function () {
+EnumField.toText = function (option) {
     return this.name + " = " + this.number + ";"
 };
 

@@ -10,7 +10,8 @@ let doc = protobuffCreator.createDoc("protobuff-creator-test",
     "test",
     {isFormat: true});
 
-console.log("document to text: " + doc.toText());
+console.log("document to text: ");
+console.log(doc.toText());
 
 doc.dispose();
 

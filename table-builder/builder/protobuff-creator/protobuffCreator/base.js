@@ -15,13 +15,14 @@ let Base = function (name, option) {
 };
 
 /**
- *
+ * Create text
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Base
  * @instance
  */
-Base.prototype.toText = function () {
+Base.prototype.toText = function (option) {
     return "Base";
 };
 

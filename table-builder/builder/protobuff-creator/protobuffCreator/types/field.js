@@ -25,12 +25,13 @@ Field.prototype.constructor = Field;
 
 /**
  *
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Field
  * @instance
  */
-Field.prototype.toText = function () {
+Field.prototype.toText = function (option) {
     return (this.isRepeated ? "repeated " : "") +
         this.type.toText() + " " +
         this.name + " = " +

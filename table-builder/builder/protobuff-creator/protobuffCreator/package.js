@@ -20,14 +20,15 @@ Package.prototype = Object.create(Base.prototype);
 Package.prototype.constructor = Package;
 
 /**
- * create text
+ * Create text
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Package
  * @instance
  */
-Package.prototype.toText = function () {
-    return "package " + this.name;
+Package.prototype.toText = function (option) {
+    return "package " + this.name + ";";
 };
 
 module.exports = Package;

@@ -39,12 +39,13 @@ Message.prototype.addField = function (fieldName, fieldType, fieldOption) {
 
 /**
  * create text
+ * @param {{isFormat:Boolean}} [option]
  * @return {string}
  *
  * @memberOf Message
  * @instance
  */
-Message.prototype.toText = function () {
+Message.prototype.toText = function (option) {
     let result = "message " + this.name + " { ";
     let fields = this.fields;
     let len = fields.length;
