@@ -32,12 +32,6 @@ let Document = function (name, version, packageName, option) {
      * @member {Package}
      */
     this.package = new Package(packageName);
-
-    /**
-     *
-     * @member {Boolean}
-     */
-    this.isFormat = option && option.isFormat || false;
     /**
      *
      * @member {Array.<Import>}
@@ -87,7 +81,7 @@ Document.prototype.dispose = function () {
  */
 Document.prototype.toText = function (option) {
     //option isFormat is preferential to member(field) isformat.
-    let isFormat = option && option.isFormat !== undefined ? option.isFormat : this.isFormat;
+    let isFormat = option && option.isFormat || false;
     let isNeedNewLine = false;
     let resultStr = "";
     let len;

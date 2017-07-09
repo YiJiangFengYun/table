@@ -45,13 +45,18 @@ Enum.prototype.addField = function (fieldName, fieldOption) {
  * @instance
  */
 Enum.prototype.toText = function (option) {
-    let result = "enum " + this.name + " { ";
+    var isFormat = option && option.isFormat || false;
+    let result = "enum " + this.name;
+    if(isFormat)result += "\n";
+    result += " { ";
+    if(isFormat)result += "\n";
     let fields = this.fields;
     let len = fields.length;
     let i;
     for(i = 0; i < len; ++i)
     {
         result += fields[i].name + " = " + fields[i].number + ";";
+        if(result) result += "\n";
     }
     result += " }";
     return result;

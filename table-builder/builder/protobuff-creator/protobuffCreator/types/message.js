@@ -14,7 +14,7 @@ let Field = require("./field");
  * @constructor
  */
 let Message = function (name, option) {
-    Type.call(name, option);
+    Type.call(this, name, option);
     this.fields = [];
 };
 
@@ -46,13 +46,18 @@ Message.prototype.addField = function (fieldName, fieldType, fieldOption) {
  * @instance
  */
 Message.prototype.toText = function (option) {
-    let result = "message " + this.name + " { ";
+    let isFormat = option && option.isFormat || false;
+    let result = "message " + this.name;
+    if(isFormat)result += "\n";
+    result += " { ";
+    if(isFormat)result += "\n";
     let fields = this.fields;
     let len = fields.length;
     let i;
     for(i = 0; i < len; ++i)
     {
         result += fields[i].name + " = " + fields[i].number + ";";
+        if(isFormat)result += "\n";
     }
     result += " }";
     return result;

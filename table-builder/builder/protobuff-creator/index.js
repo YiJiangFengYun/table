@@ -5,6 +5,8 @@
 let documentVersion = require("./protobuffCreator/documentVersion");
 let Document = require("./protobuffCreator/document");
 let Import = require("./protobuffCreator/import");
+let Enum = require("./protobuffCreator/types/enum");
+let Message = require("./protobuffCreator/types/message");
 
 module.exports = {
     /**
@@ -30,6 +32,24 @@ module.exports = {
     createImport: function (name, option) {
         var imp = new Import(name, option);
         return imp;
+    },
+    /**
+     * @param {String} name
+     * @param {Object?} option
+     * @return {Enum}
+     */
+    createEnum: function (name, option) {
+        var e = new Enum(name, option);
+        return e;
+    },
+    /**
+     * @param {String} name
+     * @param {Object?} option
+     * @return {Message}
+     */
+    createMessage: function (name, option) {
+        var msg = new Message(name, option);
+        return msg;
     }
 };
 
