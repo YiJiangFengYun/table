@@ -15,6 +15,9 @@ let Base = require("./base");
  */
 let Import = function (name, option) {
     Base.call(this, name, option);
+    /**
+     * @member {String}
+     */
     this.mode = option ? option.mode || "" : "";
 };
 

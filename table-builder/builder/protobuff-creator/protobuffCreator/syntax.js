@@ -15,6 +15,9 @@ let docVersion = require("./documentVersion");
  */
 let Syntax = function (name, option) {
     Base.call(this, name, option);
+    /**
+     * @member {string}
+     */
     this.version = option.version === docVersion.VERSION_2 ? "proto2" : "proto3";
 };
 

@@ -4,19 +4,29 @@
  */
 
 let Base = require("./../base");
+let Type = require("./type");
 
 /**
  * Field type of message
- * @param {string} name
+ * @param {String} name
  * @param {Type} type
- * @param {object?} option
+ * @param {Object?} option
  *
  * @constructor
  */
 let Field = function (name, type, option) {
     Base.call(this, name, option);
+    /**
+     * @member {Boolean}
+     */
     this.isRepeated = option ? option.isRepeated || false : false;
+    /**
+     * @member {Number}
+     */
     this.number = option ? option.number || 0 : 0;
+    /**
+     * @member {Type}
+     */
     this.type = type;
 };
 

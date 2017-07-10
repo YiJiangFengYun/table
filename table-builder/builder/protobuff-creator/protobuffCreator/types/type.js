@@ -6,9 +6,10 @@ let Base = require("./../base");
 
 /**
  * Proto buff type
- * @param {string} name
- * @param {object?} option
+ * @param {String} name
+ * @param {Object?} option
  *
+ * @class
  * @constructor
  */
 let Type = function (name, option) {
@@ -26,8 +27,11 @@ Type.prototype.constructor = Type;
  * @memberOf Type
  * @instance
  */
-Type.prototype. toText = function (option) {
+Type.prototype.toText = function (option) {
     return this.name;
 };
 
+/**
+ * @type {Type}
+ */
 module.exports = Type;

@@ -9,6 +9,9 @@
  * @constructor
  */
 let Base = function (name, option) {
+    /**
+     * @member {String}
+     */
     this.name = name;
     if (option) {
     }

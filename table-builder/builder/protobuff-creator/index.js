@@ -3,6 +3,7 @@
  * entry js
  */
 let documentVersion = require("./protobuffCreator/documentVersion");
+let buildInTypeMap = require("./protobuffCreator/types/buildInTypes");
 let Document = require("./protobuffCreator/document");
 let Import = require("./protobuffCreator/import");
 let Enum = require("./protobuffCreator/types/enum");
@@ -13,6 +14,7 @@ module.exports = {
      * @type {{VERSION_2:number, VERSION_3:number}}
      */
     docVersion: documentVersion,
+    buildInTypeMap : buildInTypeMap,
     /**
      * @param {String} name
      * @param {Number} version

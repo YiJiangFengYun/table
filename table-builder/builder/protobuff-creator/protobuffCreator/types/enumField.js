@@ -15,6 +15,9 @@ let Base = require("./../base");
  */
 let EnumField = function (name, option) {
     Base.call(this, name, option);
+    /**
+     * @member {Number}
+     */
     this.number = option ? option.number || 0 : 0;
 };
 
