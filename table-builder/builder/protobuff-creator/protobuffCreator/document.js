@@ -163,7 +163,7 @@ Document.prototype.toText = function (option) {
  * Add import
  * @param {String} name name of import
  * @param {Object?} option
- * @return void
+ * @return {Import}
  *
  * @memberOf Document
  * @instance
@@ -173,12 +173,14 @@ Document.prototype.addImport = function (name, option) {
     let imp = new Import(name, option);
     this.imports.push(imp);
     this.importMap[name] = imp;
+
+    return imp;
 };
 
 /**
  * Remove import
  * @param {String} name  name of import
- * @return void
+ * @return {Import}
  *
  * @memberOf Document
  * @instance
@@ -189,13 +191,14 @@ Document.prototype.removeImport = function (name) {
         delete this.importMap[name];
         this.imports.splice(this.imports.indexOf(imp));
     }
+    return imp;
 };
 
 /**
  * Add new Enum type
  * @param {String} name name of enum type
  * @param {Object?} option
- * @return void
+ * @return {Enum}
  *
  * @memberOf Document
  * @instance
@@ -205,12 +208,13 @@ Document.prototype.addEnum = function (name, option) {
     let newEnum = new Enum(name, option);
     this.enumMap[name] = newEnum;
     this.enums.push(newEnum);
+    return newEnum;
 };
 
 /**
  *
  * @param {String} name
- * @return void
+ * @return {Enum}
  *
  * @memberOf Document
  * @instance
@@ -221,13 +225,14 @@ Document.prototype.removeEnum = function (name) {
         delete this.enumMap[name];
         this.enums.splice(this.enums.indexOf(e));
     }
+    return e;
 };
 
 /**
  * Add new Message type
  * @param {String} name name of message type.
  * @param {Object?} option
- * @return void
+ * @return {Message}
  *
  * @memberOf Document
  * @instance
@@ -237,12 +242,13 @@ Document.prototype.addMessage = function (name, option) {
     let message = new Message(name, option);
     this.messageMap[name] = message;
     this.messages.push(message);
+    return message;
 };
 
 /**
  * Remove Message type
  * @param {String} name name of message type
- * @return void
+ * @return {Message}
  *
  * @memberOf Document
  * @instance
@@ -253,6 +259,7 @@ Document.prototype.removeMessage = function (name) {
         delete this.messageMap[name];
         this.messages.splice(this.messages.indexOf(message));
     }
+    return message;
 };
 
 module.exports = Document;

@@ -9,9 +9,9 @@ let doc = protobuffCreator.createDoc("protobuff-creator-test",
     protobuffCreator.docVersion.VERSION_3,
     "test");
 
-doc.addImport("import1-test");
-doc.addEnum("enum1-test");
-doc.addMessage("message1-test");
+let import1 = doc.addImport("import1-test");
+let enum1 = doc.addEnum("enum1-test");
+let message1 = doc.addMessage("message1-test");
 
 console.log("document to text: ");
 console.log(doc.toText({isFormat: true}));
