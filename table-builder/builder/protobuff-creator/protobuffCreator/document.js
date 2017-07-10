@@ -5,6 +5,9 @@
 let Base = require("./base");
 let Syntax = require("./syntax");
 let Package = require("./package");
+let Import = require("./import");
+let Enum = require("./types/enum");
+let Message = require("./types/message");
 let docVersion = require("./documentVersion");
 
 /**
@@ -38,14 +41,28 @@ let Document = function (name, version, packageName, option) {
      */
     this.imports = [];
     /**
+     * @member {Object.<String, Import>}
+     */
+    this.importMap = {};
+    /**
      *
      * @member {Array.<Import>}
      */
     this.enums = [];
     /**
+     *
+     * @member {Object.<String, Import>}
+     */
+    this.enumMap = {};
+    /**
      * @member {Array.<Message>}
      */
     this.messages = [];
+    /**
+     *
+     * @member {Object.<String, Message>}
+     */
+    this.messageMap = {};
 };
 
 Document.prototype = Object.create(Base.prototype);
@@ -59,16 +76,15 @@ Document.prototype.constructor = Document;
  * @method
  */
 Document.prototype.dispose = function () {
-    this.imports.length = 0;
-    this.enums.length = 0;
-    this.messages.length = 0;
     delete this.version;
     delete this.syntax;
     delete this.package;
     delete this.imports;
+    delete this.importMap;
     delete this.enums;
+    delete this.enumMap;
     delete this.messages;
-
+    delete this.messageMap;
 };
 
 /**
@@ -90,7 +106,7 @@ Document.prototype.toText = function (option) {
     //syntax
     resultStr += this.syntax.toText(option);
 
-    if(isFormat)resultStr += "\n";
+    if (isFormat) resultStr += "\n";
 
     //package
     resultStr += this.package.toText(option);
@@ -100,8 +116,7 @@ Document.prototype.toText = function (option) {
     let imports = this.imports;
     len = imports.length;
 
-    if(isFormat && isNeedNewLine && len !== 0)
-    {
+    if (isFormat && isNeedNewLine && len !== 0) {
         resultStr += "\n";
         isNeedNewLine = false;
     }
@@ -115,8 +130,7 @@ Document.prototype.toText = function (option) {
     let enums = this.enums;
     len = enums.length;
 
-    if(isFormat && isNeedNewLine && len !== 0)
-    {
+    if (isFormat && isNeedNewLine && len !== 0) {
         resultStr += "\n"
         isNeedNewLine = false;
     }
@@ -130,8 +144,7 @@ Document.prototype.toText = function (option) {
     let messages = this.messages;
     len = messages.length;
 
-    if(isFormat && isNeedNewLine && len !== 0)
-    {
+    if (isFormat && isNeedNewLine && len !== 0) {
         resultStr += "\n";
         isFormat = false;
     }
@@ -148,86 +161,98 @@ Document.prototype.toText = function (option) {
 
 /**
  * Add import
- * @param {Import} newImport
+ * @param {String} name name of import
+ * @param {Object?} option
  * @return void
  *
  * @memberOf Document
  * @instance
  */
-Document.prototype.addImport = function (newImport) {
-    let imports = this.imports;
-    let index = imports.indexOf(newImport);
-    if (index === -1) imports.push(newImport);
+Document.prototype.addImport = function (name, option) {
+    this.removeImport(name);
+    let imp = new Import(name, option);
+    this.imports.push(imp);
+    this.importMap[name] = imp;
 };
 
 /**
  * Remove import
- * @param {Import} removeImport
+ * @param {String} name  name of import
  * @return void
  *
  * @memberOf Document
  * @instance
  */
-Document.prototype.removeImport = function (removeImport) {
-    let imports = this.imports;
-    let index = imports.indexOf(removeImport);
-    if (index !== -1) imports.splice(index, 1);
+Document.prototype.removeImport = function (name) {
+    let imp = this.importMap[name];
+    if (imp) {
+        delete this.importMap[name];
+        this.imports.splice(this.imports.indexOf(imp));
+    }
 };
 
 /**
  * Add new Enum type
- * @param {Enum} newEnum
+ * @param {String} name name of enum type
+ * @param {Object?} option
  * @return void
  *
  * @memberOf Document
  * @instance
  */
-Document.prototype.addEnum = function (newEnum) {
-    let enums = this.enums;
-    let index = enums.indexOf(newEnum);
-    if (index === -1) enums.push(newEnum);
+Document.prototype.addEnum = function (name, option) {
+    this.removeEnum(name);
+    let newEnum = new Enum(name, option);
+    this.enumMap[name] = newEnum;
+    this.enums.push(newEnum);
 };
 
 /**
  *
- * @param {Enum} removeEnum
+ * @param {String} name
  * @return void
  *
  * @memberOf Document
  * @instance
  */
-Document.prototype.removeEnum = function (removeEnum) {
-    let enums = this.enums;
-    let index = enums.indexOf(removeEnum);
-    if (index !== -1) enums.splice(index, 1);
+Document.prototype.removeEnum = function (name) {
+    let e = this.enumMap[name];
+    if (e) {
+        delete this.enumMap[name];
+        this.enums.splice(this.enums.indexOf(e));
+    }
 };
 
 /**
  * Add new Message type
- * @param {Message} newMessage
+ * @param {String} name name of message type.
+ * @param {Object?} option
  * @return void
  *
  * @memberOf Document
  * @instance
  */
-Document.prototype.addMessage = function (newMessage) {
-    let messages = this.messages;
-    let index = messages.indexOf(newMessage);
-    if (index === -1) messages.push(newMessage);
+Document.prototype.addMessage = function (name, option) {
+    this.removeMessage(name);
+    let message = new Message(name, option);
+    this.messageMap[name] = message;
+    this.messages.push(message);
 };
 
 /**
  * Remove Message type
- * @param {Message} removeMessage
+ * @param {String} name name of message type
  * @return void
  *
  * @memberOf Document
  * @instance
  */
-Document.prototype.removeMessage = function (removeMessage) {
-    let messages = this.messages;
-    let index = messages.indexOf(removeMessage);
-    if (index !== -1) messages.splice(index, 1);
+Document.prototype.removeMessage = function (name) {
+    let message = this.messageMap[name];
+    if(message){
+        delete this.messageMap[name];
+        this.messages.splice(this.messages.indexOf(message));
+    }
 };
 
 module.exports = Document;
