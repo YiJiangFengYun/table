@@ -6,13 +6,6 @@
 let Type = require("./type");
 let EnumField = require("./enumField");
 
-/**
- *
- * @param name  enum name
- * @param option enum option
- *
- * @constructor
- */
 let Enum = function (name, option) {
     Type.call(this, name, option);
     this.fields = [];
@@ -21,14 +14,6 @@ let Enum = function (name, option) {
 Enum.prototype = Object.create(Type.prototype);
 Enum.prototype.constructor = Enum;
 
-/**
- *
- * @param {string} fieldName
- * @param {object?} fieldOption
- *
- * @memberOf Enum
- * @instance
- */
 Enum.prototype.addField = function (fieldName, fieldOption) {
     let newField = new EnumField(fieldName, fieldOption);
     let fields = this.fields;
@@ -36,14 +21,6 @@ Enum.prototype.addField = function (fieldName, fieldOption) {
     fields.push(newField);
 };
 
-/**
- *
- * @param {{isFormat:Boolean}} [option]
- * @return {string}
- *
- * @memberOf Enum
- * @instance
- */
 Enum.prototype.toText = function (option) {
     var isFormat = option && option.isFormat || false;
     let result = "enum " + this.name;

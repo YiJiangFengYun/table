@@ -6,45 +6,39 @@
 let Type = require("./type");
 let Field = require("./field");
 
-/**
- *
- * @param {string} name
- * @param {object?} option
- *
- * @constructor
- */
 let Message = function (name, option) {
     Type.call(this, name, option);
+
     this.fields = [];
+
+    this.fieldMap = {};
 };
 
 Message.prototype = Object.create(Type.prototype);
 Message.prototype.constructor = Message;
 
-/**
- * Add filed to message.
- * @param {string} fieldName
- * @param {Type} fieldType
- * @param {object?} fieldOption
- *
- * @memberOf Message
- * @instance
- */
 Message.prototype.addField = function (fieldName, fieldType, fieldOption) {
+    this.removeField(fieldName);
     let newField = new Field(fieldName, fieldType, fieldOption);
     let fields = this.fields;
     newField.number = fields.length + 1; //start from 1.
     fields.push(newField);
+    this.fieldMap[fieldName] = newField;
+
+    return newField;
 };
 
-/**
- * create text
- * @param {{isFormat:Boolean}} [option]
- * @return {string}
- *
- * @memberOf Message
- * @instance
- */
+Message.prototype.removeField = function (fieldName) {
+    let field = this.fieldMap[fieldName];
+    if(field)
+    {
+        this.fields.splice(this.fields.indexOf(field));
+        delete this.fieldMap[fieldName];
+    }
+
+    return field;
+}
+
 Message.prototype.toText = function (option) {
     let isFormat = option && option.isFormat || false;
     let result = "message " + this.name;
@@ -56,7 +50,7 @@ Message.prototype.toText = function (option) {
     let i;
     for(i = 0; i < len; ++i)
     {
-        result += fields[i].name + " = " + fields[i].number + ";";
+        result += fields[i].toText(option);
         if(isFormat)result += "\n";
     }
     result += " }";
@@ -65,3 +59,4 @@ Message.prototype.toText = function (option) {
 };
 
 module.exports = Message;
+

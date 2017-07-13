@@ -10,71 +10,31 @@ let Enum = require("./types/enum");
 let Message = require("./types/message");
 let docVersion = require("./documentVersion");
 
-/**
- * Proto buff document
- * @param {string} name
- * @param {number} version
- * @param {string} packageName
- * @param {object?} option
- *
- * @constructor
- */
 let Document = function (name, version, packageName, option) {
     Base.call(this, name, option);
-    /**
-     * @member {Number}
-     */
+
     this.version = version || docVersion.VERSION_3;
-    /**
-     *
-     * @member {Syntax}
-     */
+
     this.syntax = new Syntax("documentSyntax", {version: this.version});
-    /**
-     *
-     * @member {Package}
-     */
+
     this.package = new Package(packageName);
-    /**
-     *
-     * @member {Array.<Import>}
-     */
+
     this.imports = [];
-    /**
-     * @member {Object.<String, Import>}
-     */
+
     this.importMap = {};
-    /**
-     *
-     * @member {Array.<Import>}
-     */
+
     this.enums = [];
-    /**
-     *
-     * @member {Object.<String, Import>}
-     */
+
     this.enumMap = {};
-    /**
-     * @member {Array.<Message>}
-     */
+
     this.messages = [];
-    /**
-     *
-     * @member {Object.<String, Message>}
-     */
+
     this.messageMap = {};
 };
 
 Document.prototype = Object.create(Base.prototype);
 Document.prototype.constructor = Document;
 
-/**
- *
- * @return void
- * @memberOf Document
- * @instance
- * @method
- */
 Document.prototype.dispose = function () {
     delete this.version;
     delete this.syntax;
@@ -87,14 +47,6 @@ Document.prototype.dispose = function () {
     delete this.messageMap;
 };
 
-/**
- * create text
- * @param {{isFormat:Boolean}} [option]
- * @return {string}
- *
- * @memberOf Document
- * @instance
- */
 Document.prototype.toText = function (option) {
     //option isFormat is preferential to member(field) isformat.
     let isFormat = option && option.isFormat || false;
@@ -131,13 +83,14 @@ Document.prototype.toText = function (option) {
     len = enums.length;
 
     if (isFormat && isNeedNewLine && len !== 0) {
-        resultStr += "\n"
+        resultStr += "\n";
         isNeedNewLine = false;
     }
 
     for (i = 0; i < len; ++i) {
         resultStr += enums[i].toText(option);
-        isNeedNewLine = true;
+        resultStr += "\n";
+        isNeedNewLine = false;
     }
 
     //messages
@@ -151,7 +104,8 @@ Document.prototype.toText = function (option) {
 
     for (i = 0; i < len; ++i) {
         resultStr += messages[i].toText(option);
-        isNeedNewLine = true;
+        resultStr += "\n";
+        isNeedNewLine = false;
     }
 
     isNeedNewLine = false;
@@ -159,15 +113,6 @@ Document.prototype.toText = function (option) {
 
 };
 
-/**
- * Add import
- * @param {String} name name of import
- * @param {Object?} option
- * @return {Import}
- *
- * @memberOf Document
- * @instance
- */
 Document.prototype.addImport = function (name, option) {
     this.removeImport(name);
     let imp = new Import(name, option);
@@ -177,14 +122,6 @@ Document.prototype.addImport = function (name, option) {
     return imp;
 };
 
-/**
- * Remove import
- * @param {String} name  name of import
- * @return {Import}
- *
- * @memberOf Document
- * @instance
- */
 Document.prototype.removeImport = function (name) {
     let imp = this.importMap[name];
     if (imp) {
@@ -194,15 +131,6 @@ Document.prototype.removeImport = function (name) {
     return imp;
 };
 
-/**
- * Add new Enum type
- * @param {String} name name of enum type
- * @param {Object?} option
- * @return {Enum}
- *
- * @memberOf Document
- * @instance
- */
 Document.prototype.addEnum = function (name, option) {
     this.removeEnum(name);
     let newEnum = new Enum(name, option);
@@ -211,14 +139,6 @@ Document.prototype.addEnum = function (name, option) {
     return newEnum;
 };
 
-/**
- *
- * @param {String} name
- * @return {Enum}
- *
- * @memberOf Document
- * @instance
- */
 Document.prototype.removeEnum = function (name) {
     let e = this.enumMap[name];
     if (e) {
@@ -228,15 +148,6 @@ Document.prototype.removeEnum = function (name) {
     return e;
 };
 
-/**
- * Add new Message type
- * @param {String} name name of message type.
- * @param {Object?} option
- * @return {Message}
- *
- * @memberOf Document
- * @instance
- */
 Document.prototype.addMessage = function (name, option) {
     this.removeMessage(name);
     let message = new Message(name, option);
@@ -245,14 +156,6 @@ Document.prototype.addMessage = function (name, option) {
     return message;
 };
 
-/**
- * Remove Message type
- * @param {String} name name of message type
- * @return {Message}
- *
- * @memberOf Document
- * @instance
- */
 Document.prototype.removeMessage = function (name) {
     let message = this.messageMap[name];
     if(message){

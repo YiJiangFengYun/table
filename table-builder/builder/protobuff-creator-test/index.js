@@ -16,7 +16,11 @@ let enum1 = doc.addEnum("enum1-test");
 let message1 = doc.addMessage("message1-test");
 
 enum1.addField("ENUM_1");
-message1.addField("name", buildInTypeMap.string);
+message1.addField("field", buildInTypeMap.string);
+message1.addField("fieldRepeat", buildInTypeMap.int32, {isRepeated: true});
+
+let message2 = doc.addMessage("message2-test");
+message2.addField("enum1", enum1);
 
 console.log("document to text: ");
 console.log(doc.toText({isFormat: true}));
