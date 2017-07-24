@@ -10,18 +10,8 @@ let Enum = require("./protobuffCreator/types/enum");
 let Message = require("./protobuffCreator/types/message");
 
 module.exports = {
-    /**
-     * @type {{VERSION_2:number, VERSION_3:number}}
-     */
     docVersion: documentVersion,
     buildInTypeMap : buildInTypeMap,
-    /**
-     * @param {String} name
-     * @param {Number} version
-     * @param {String} packageName
-     * @param {Object?} option
-     * @return {Document}
-     */
     createDoc: function (name, version, packageName, option) {
         var doc = new Document(name, version, packageName, option);
         return doc;

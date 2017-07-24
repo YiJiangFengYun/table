@@ -29,6 +29,9 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="docToCode.js">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="main.js" />
     <Compile Include="traverse-files.js" />
     <Content Include="package.json" />

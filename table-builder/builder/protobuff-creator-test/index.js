@@ -3,13 +3,13 @@
  * test proto buffer creator.
  */
 
-let protobuffCreator = require("./../protobuff-creator");
+let protoBuffCreator = require("./../protobuff-creator");
 
-let doc = protobuffCreator.createDoc("protobuff-creator-test",
-    protobuffCreator.docVersion.VERSION_3,
+let doc = protoBuffCreator.createDoc("protobuff-creator-test",
+    protoBuffCreator.docVersion.VERSION_3,
     "test");
 
-let buildInTypeMap = protobuffCreator.buildInTypeMap;
+let buildInTypeMap = protoBuffCreator.buildInTypeMap;
 
 let import1 = doc.addImport("import1-test");
 let enum1 = doc.addEnum("enum1-test");

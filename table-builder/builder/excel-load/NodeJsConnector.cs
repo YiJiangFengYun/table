@@ -27,7 +27,7 @@ namespace excel_load
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public async Task<object> Excecute(dynamic input)
+        public async Task<object> Execute(dynamic input)
         {
             Result result;
             try

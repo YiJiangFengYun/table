@@ -3,6 +3,7 @@ var path = require("path");
 var fsExtra = require("fs-extra");
 var traverseFiles = require("./traverse-files");
 var edge = require("edge");
+var docCreator = require("./../protobuff-creator");
 
 var builder = {};
 module.exports = builder;
@@ -25,11 +26,11 @@ builder.init = function (cb) {
             cb();
         });
     });
-}
+};
 
-builder.registerExstension = function (extension) {
+builder.registerExtension = function (extension) {
 
-}
+};
 
 //start build
 //option
@@ -62,23 +63,23 @@ builder.build = function (option, cb) {
         });
     });
     
-}
+};
 
 //Initialize configure setting.
 builder._initConfig = function (cb) {
-    //Sett builder environment. it can be set to "development" or "production"
+    //Set builder environment. it can be set to "development" or "production"
     //builder.env = ENV_PRODUCTION;
     builder.env = ENV_DEVELOPMENT;
     cb();
-}
+};
 
 
 //Initialize environment. example: it will install excel-load dll from excel-load project.
 builder._initEnv = function (cb) {
     var modulePath = __dirname.substr();
     //copy useful dll from excel-build-cs project.
-    console.log("Start copy excel-load dll to dlls");
-    var dllDir = builder.env == ENV_DEVELOPMENT ? "./../excel-load/bin/Debug" : "./../excel-load/bin/Release"
+    console.log("Start copy excel-load dll to dlls directory.");
+    var dllDir = builder.env === ENV_DEVELOPMENT ? "./../excel-load/bin/Debug" : "./../excel-load/bin/Release";
     var sourceDir = path.join(modulePath, dllDir);
     var targetDir = path.join(modulePath, "./dlls");
     var excelBuildDllFileName = "excel-load.dll";
@@ -95,16 +96,24 @@ builder._initEnv = function (cb) {
                 return cb(err);
             }
             console.log("Copied " + copySrcPath + " to " + copyTargetPath);
-            console.log("Complete copy excel-build-cs dll to dlls");
+            console.log("Complete copy excel-build-cs dll to dlls directory.");
             cb();
         });
     });
-}
+};
 
 //build common dynamic proto file, run protoc application to generate proto code for difference languages.
 builder._buildCommonProto = function (cb) {
+    //create table proto buff file
+    var packageName = "table";
+    var tableProtoDoc = docCreator.createDoc("table", docCreator.docVersion.VERSION_2, packageName);
+    var buildInTypeMap = docCreator.buildInTypeMap;
+    var tableMessage = tableProtoDoc.addMessage("Table");
+    tableMessage.addField("name", buildInTypeMap.string);
+
+
     cb();
-}
+};
 
 //load excel table files in specific location, parse they to data arrays.
 //option:
@@ -120,14 +129,14 @@ builder._parseTables = function (option, eachCb, cb) {
     traverseFiles(tableDir, function (filePath, fileContent, fileSize, doneCb) {
         var excelFileExt = ".xlsx";
         if (filePath.length > excelFileExt.length &&
-            filePath.substr(filePath.length - excelFileExt.length, excelFileExt.length) == excelFileExt) {
+            filePath.substr(filePath.length - excelFileExt.length, excelFileExt.length) === excelFileExt) {
 
             var modulePath = __dirname.substr();
             var assemblyFile = path.join(modulePath, "./dlls/excel-load.dll");
             var buildFromEdge = edge.func({
                 assemblyFile: assemblyFile,
                 typeName: "excel_load.NodeJsConnector",
-                methodName: "Excecute"
+                methodName: "Execute"
             });
 
             buildFromEdge({
@@ -139,7 +148,7 @@ builder._parseTables = function (option, eachCb, cb) {
                     return;
                 }
 
-                if (result.isComplete == false) {
+                if (result.isComplete === false) {
                     doneCb(result.msg);
                     return;
                 }
@@ -155,7 +164,7 @@ builder._parseTables = function (option, eachCb, cb) {
     }, function (err) {
         cb(err);
     });
-}
+};
 
 
 builder._buildTable = function (tablesOfTable, cb) {
@@ -184,24 +193,23 @@ builder._buildTable = function (tablesOfTable, cb) {
 
         })
     })
-}
+};
 
 //build table dynamic proto file, run protoc application to generate proto code for difference languages.
 builder._buildTableProto = function (tablesOfTable, cb) {
     cb();
-}
+};
 
 //generate table js objects
 builder._createTableObjs = function (tablesOfTable, cb) {
     cb();
-}
+};
 
 //table js objects check
 builder._checkTable = function (cb) {
     cb();
-}
+};
 
 builder._generateTableBin = function (cb) {
     cb();
-}
-
+};
