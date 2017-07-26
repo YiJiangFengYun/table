@@ -1,0 +1,17 @@
+from creator.types import pb_type
+
+double = pb_type.Type("double")
+float = pb_type.Type("float")
+int32 = pb_type.Type("int32")
+int64 = pb_type.Type("int64")
+uint32 = pb_type.Type("uint32")
+uint64 = pb_type.Type("uint64")
+sint32 = pb_type.Type("sint32")
+sint64 = pb_type.Type("sint64")
+fixed32 = pb_type.Type("fixed32")
+fixed64 = pb_type.Type("fixed64")
+sfixed32 = pb_type.Type("sfixed32")
+sfixed64 = pb_type.Type("sfixed64")
+bool = pb_type.Type("bool")
+string = pb_type.Type("string")
+bytes = pb_type.Type("bytes")
