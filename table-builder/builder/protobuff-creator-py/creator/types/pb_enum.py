@@ -1,11 +1,13 @@
+from typing import List
+from typing import Dict
 from creator.types import pb_type
 from creator.types import pb_enum_field
 
 
 class Enum(pb_type.Type):
-    def __init__(self, name: str, option: dict = None):
+    def __init__(self, name: str, option: Dict = None):
         super(Enum, self).__init__(name, option)
-        self.arr_fields = []  # type: list[pb_enum_field.EnumField]
+        self.arr_fields: List[pb_enum_field.EnumField] = []
 
     def add_field(self, field_name: str, field_option: dict = None):
         if field_option is None:

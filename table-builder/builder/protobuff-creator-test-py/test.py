@@ -17,7 +17,8 @@ message1.add_field("fieldRepeat", pb_buildInTypes.int32, {"is_repeated": True})
 message2 = doc.add_message("message2-test")
 message2.add_field("enum1", enum1)
 
-print("document to text: {} ".format(doc.to_text()))
+print("document to text: ")
+print(doc.to_text())
 
 doc.dispose()
 

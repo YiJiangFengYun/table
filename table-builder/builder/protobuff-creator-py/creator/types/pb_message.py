@@ -1,12 +1,14 @@
+from typing import List
+from typing import Dict
 from creator.types import pb_type
 from creator.types import pb_field
 
 
 class Message(pb_type.Type):
-    def __init__(self, name: str, option: dict = None):
+    def __init__(self, name: str, option: Dict = None):
         super(Message, self).__init__(name, option)
-        self.arr_fields = []  # type: list[pb_field.Field]
-        self.map_fields = {}  # type: dict[str, pb_field.Field]
+        self.arr_fields: List[pb_field.Field] = []
+        self.map_fields: Dict[str, pb_field.Field] = {}
 
     def add_field(self, field_name: str, field_type: pb_type.Type, field_option: dict = None) -> pb_field.Field:
         self.remove_field(field_name)

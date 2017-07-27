@@ -1,3 +1,5 @@
+from typing import List
+from typing import Dict
 from creator import base
 from creator import pb_syntax
 from creator import pb_package
@@ -9,17 +11,17 @@ from creator import pb_enum_doc_versions
 
 class Document(base.Base):
     def __init__(self, name: str, version: pb_enum_doc_versions.DocVersion,
-                 package_name: str, option: dict = None):
+                 package_name: str, option: Dict = None):
         super(Document, self).__init__(name, option)
         self.version = version
         self.syntax = pb_syntax.Syntax("documentSyntax", {version: self.version})
         self.package = pb_package.Package(package_name)
-        self.arr_imports = []  # type: list[pb_import.Import]
-        self.map_imports = {}  # type: dict[str, pb_import.Import]
-        self.arr_enums = []  # type: list[pb_enum.Enum]
-        self.map_enums = {}  # type: dict[str, pb_enum.Enum]
-        self.arr_messages = []  # type: list[pb_message.Message]
-        self.map_messages = {}  # type: dict[str, pb_message.Message]
+        self.arr_imports: List[pb_import.Import] = []
+        self.map_imports: Dict[str, pb_import.Import] = {}
+        self.arr_enums: List[pb_enum.Enum] = []
+        self.map_enums: Dict[str, pb_enum.Enum] = {}
+        self.arr_messages: List[pb_message.Message] = []
+        self.map_messages: Dict[str, pb_message.Message] = {}
 
     def dispose(self):
         del self.version
@@ -39,42 +41,54 @@ class Document(base.Base):
         if option is not None and "is_format" in option:
             is_format = option["is_format"]
         result = ""
+        is_need_new_line = False
 
         # syntax
         result += self.syntax.to_text(option)
-        is_need_new_line = True
+        if is_format:
+            result += "\n"
+
+        # package
+        result += self.package.to_text(option)
 
         # imports
         arr_imports = self.arr_imports
         arr_len = len(arr_imports)
-        if is_format and is_need_new_line and arr_len != 0:
+        if is_need_new_line and arr_len != 0:
             result += "\n"
             is_need_new_line = False
         for import_item in arr_imports:
             result += import_item.to_text(option)
-            is_need_new_line = True
+            if is_need_new_line:
+                result += "\n"
+            if is_format:
+                is_need_new_line = True
 
         # enums
         arr_enums = self.arr_enums
         arr_len = len(arr_enums)
-        if is_format and is_need_new_line and arr_len != 0:
+        if is_need_new_line and arr_len != 0:
             result += "\n"
             is_need_new_line = False
         for enum_item in arr_enums:
             result += enum_item.to_text(option)
-            result += "\n"
-            is_need_new_line = False
+            if is_need_new_line:
+                result += "\n"
+            if is_format:
+                is_need_new_line = True
 
         # messages
         arr_messages = self.arr_messages
         arr_len = len(arr_messages)
-        if is_format and is_need_new_line and arr_len != 0:
-            result += "\n"
-            is_format = False
-        for message_item in arr_messages:
-            result += message_item.to_text(option)
+        if is_need_new_line and arr_len != 0:
             result += "\n"
             is_need_new_line = False
+        for message_item in arr_messages:
+            result += message_item.to_text(option)
+            if is_need_new_line:
+                result += "\n"
+            if is_format:
+                is_need_new_line = True
 
         is_need_new_line = False
         return result

@@ -33,7 +33,7 @@ Enum.prototype.toText = function (option) {
     for(i = 0; i < len; ++i)
     {
         result += fields[i].name + " = " + fields[i].number + ";";
-        if(result) result += "\n";
+        if(isFormat) result += "\n";
     }
     result += " }";
     return result;
