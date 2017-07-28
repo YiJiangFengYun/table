@@ -1,12 +1,12 @@
 from typing import List
 from typing import Dict
-from creator import base
-from creator import pb_syntax
-from creator import pb_package
-from creator import pb_import
-from creator.types import pb_enum
-from creator.types import pb_message
-from creator import pb_enum_doc_versions
+from pb_creator import base
+from pb_creator import pb_syntax
+from pb_creator import pb_package
+from pb_creator import pb_import
+from pb_creator.types import pb_enum
+from pb_creator.types import pb_message
+from pb_creator import pb_enum_doc_versions
 
 
 class Document(base.Base):
@@ -127,7 +127,7 @@ class Document(base.Base):
 
     def add_message(self, name: str, option: dict = None) -> pb_message.Message:
         self.remove_message(name)
-        message = pb_message.Message(name, option)
+        message: pb_message.Message = pb_message.Message(name, option)
         self.arr_messages.append(message)
         self.map_messages[name] = message
         return message

@@ -1,5 +1,5 @@
-from creator import base
-from creator.types import pb_type
+from pb_creator import base
+from pb_creator.types import pb_type
 
 DocType = pb_type.Type
 

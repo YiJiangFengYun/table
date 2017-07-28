@@ -1,7 +1,7 @@
 from typing import List
 from typing import Dict
-from creator.types import pb_type
-from creator.types import pb_field
+from pb_creator.types import pb_type
+from pb_creator.types import pb_field
 
 
 class Message(pb_type.Type):
@@ -12,7 +12,7 @@ class Message(pb_type.Type):
 
     def add_field(self, field_name: str, field_type: pb_type.Type, field_option: dict = None) -> pb_field.Field:
         self.remove_field(field_name)
-        new_field = pb_field.Field(field_name, field_type, field_option)
+        new_field: pb_field.Field = pb_field.Field(field_name, field_type, field_option)
         arr_fields = self.arr_fields
         # start from 1
         new_field.number = len(arr_fields) + 1

@@ -1,4 +1,4 @@
-from creator.types import pb_type
+from pb_creator.types import pb_type
 
 type_double = pb_type.Type("double")
 type_float = pb_type.Type("float")

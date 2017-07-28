@@ -1,5 +1,5 @@
-from creator import base
-from creator.pb_enum_doc_versions import DocVersion
+from pb_creator import base
+from pb_creator.pb_enum_doc_versions import DocVersion
 
 
 class Syntax(base.Base):

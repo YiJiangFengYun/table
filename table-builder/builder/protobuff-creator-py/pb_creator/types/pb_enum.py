@@ -1,7 +1,7 @@
 from typing import List
 from typing import Dict
-from creator.types import pb_type
-from creator.types import pb_enum_field
+from pb_creator.types import pb_type
+from pb_creator.types import pb_enum_field
 
 
 class Enum(pb_type.Type):
