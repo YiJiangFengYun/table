@@ -10,12 +10,12 @@ class Builder:
     arr_extensions: List[extensions.Base] = []
 
     def __init__(self,
-                 pb_version: pb_enum_doc_versions.DocVersion = pb_enum_doc_versions.DocVersion,
+                 pb_version: int,
                  excels_dir: str = ".",
                  code_output_dir: str = ".",
                  binary_output_dir: str = ".",
                  protoc_path: str = "."):
-        self.pb_version: pb_enum_doc_versions.DocVersion = pb_version
+        self.pb_version: pb_enum_doc_versions.DocVersion = pb_enum_doc_versions.DocVersion(pb_version)
         self.excels_dir: str = excels_dir
         self.code_output_dir: str = code_output_dir
         self.binary_output_dir: str = binary_output_dir
@@ -33,7 +33,7 @@ class Builder:
     def _build_common_pb(self):
         """build common dynamic proto buffer document, run protoc application to generate
         protocol code for difference languages."""
-        package_name: str = "table"
+        package_name = "table"
         table_pb_doc: pb_document.Document = pb_document.Document("table", self.pb_version, package_name)
         table_message = table_pb_doc.add_message("Table")
         table_message.add_field("name", pb_build_in_types.type_string)
@@ -45,7 +45,7 @@ class Builder:
         column_message.add_field("type_name", pb_build_in_types.type_string)
 
         creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path)
-        creator.create(table_pb_doc.to_text())
+        creator.create(table_pb_doc)
 
     def _load_and_build_tables(self):
         """load excel tables in specific location, parse them with _parse_table method"""

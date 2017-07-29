@@ -1,8 +1,9 @@
-from enum import Enum
-from typing import List
-from os import path
-import subprocess
 import os
+import pathlib
+import subprocess
+from enum import Enum
+
+from pb_creator import pb_document
 
 
 class ECodeTypes(Enum):
@@ -12,18 +13,18 @@ class ECodeTypes(Enum):
 
 class CodeCreator:
     def __init__(self, output_dir: str, protoc_path: str):
-        self.protoc_path = protoc_path
-        self.output_dir = output_dir
-        self.temp_proto_file_name = "temp.proto"
+        self.protoc_path: pathlib.Path = pathlib.Path(protoc_path)
+        self.output_dir: pathlib.Path = pathlib.Path(output_dir)
 
-    def create(self, doc_text: str, types: List[ECodeTypes] = None):
-        if types is None:
-            types = []
-            for code_type in range(ECodeTypes.COUNT):
-                types.append(code_type)
+    def create(self, doc: pb_document.Document):
+        types = []
+        for code_type in range(ECodeTypes.COUNT.value):
+            types.append(ECodeTypes(code_type))
+        doc_text = doc.to_text()
         if len(doc_text) > 0:
             # Create temp .proto file
-            temp_file_path = path.join(self.output_dir, self.temp_proto_file_name)
+            proto_file_name = doc.name + ".proto"
+            temp_file_path: pathlib.Path = self.output_dir.joinpath(proto_file_name)
             file = open(temp_file_path, "w")
             file.write(doc_text)
             file.close()
@@ -31,15 +32,17 @@ class CodeCreator:
             #  Call protoc command to create code
             for code_type in types:
                 if code_type == ECodeTypes.PYTHON:
-                    self._create_python(temp_file_path)
+                    self._create_python(proto_file_name)
                 else:
                     raise ValueError("Type is undefined.")
 
             # Delete temp .proto file
-            os.remove(temp_file_path)
+            os.remove(str(temp_file_path))
 
-    def _create_python(self, proto_file_path: str):
-        subprocess.call([path.join(self.protoc_path, "protoc"),
-                         "--proto_path=" + self.output_dir,
-                         "--python_out=" + self.output_dir,
-                         self.temp_proto_file_name])
+    def _create_python(self, proto_file_name: str):
+        python_out_path = self.output_dir.joinpath("python")
+        python_out_path.mkdir(exist_ok=True)
+        subprocess.run([str(self.protoc_path),
+                        "--proto_path=" + str(self.output_dir),
+                        "--python_out=" + str(python_out_path),
+                        str(self.output_dir.joinpath(proto_file_name))])
