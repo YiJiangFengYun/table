@@ -3,6 +3,7 @@ from table_builder import extensions
 from pb_creator import pb_document
 from pb_creator import pb_enum_doc_versions
 from pb_creator.types import pb_build_in_types
+from table_builder import code_creator
 
 
 class Builder:
@@ -12,11 +13,13 @@ class Builder:
                  pb_version: pb_enum_doc_versions.DocVersion = pb_enum_doc_versions.DocVersion,
                  excels_dir: str = ".",
                  code_output_dir: str = ".",
-                 binary_output_dir: str = "."):
+                 binary_output_dir: str = ".",
+                 protoc_path: str = "."):
         self.pb_version: pb_enum_doc_versions.DocVersion = pb_version
         self.excels_dir: str = excels_dir
         self.code_output_dir: str = code_output_dir
         self.binary_output_dir: str = binary_output_dir
+        self.protoc_path: str = protoc_path
 
     def register_extension(self, extension: extensions.Base):
         self.arr_extensions.index(extension)
@@ -41,7 +44,8 @@ class Builder:
         column_message.add_field("description", pb_build_in_types.type_string)
         column_message.add_field("type_name", pb_build_in_types.type_string)
 
-        table_pb_doc.to_text()
+        creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path)
+        creator.create(table_pb_doc.to_text())
 
     def _load_and_build_tables(self):
         """load excel tables in specific location, parse them with _parse_table method"""
