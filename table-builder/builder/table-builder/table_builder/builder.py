@@ -1,9 +1,13 @@
+from pathlib import Path
 from typing import List
-from table_builder import extensions
+
+import xlrd
+
 from pb_creator import pb_document
 from pb_creator import pb_enum_doc_versions
 from pb_creator.types import pb_build_in_types
 from table_builder import code_creator
+from table_builder import extensions
 
 
 class Builder:
@@ -11,15 +15,31 @@ class Builder:
 
     def __init__(self,
                  pb_version: int,
-                 excels_dir: str = ".",
-                 code_output_dir: str = ".",
-                 binary_output_dir: str = ".",
-                 protoc_path: str = "."):
+                 excels_dir: Path = ".",
+                 code_output_dir: Path = ".",
+                 binary_output_dir: Path = ".",
+                 protoc_path: Path = "."):
+        #  some detects for arguments.
+        if excels_dir.exists() is False:
+            raise ValueError("Excel directory don't exists!")
+        if excels_dir.is_dir() is False:
+            raise ValueError("Argument value of excel directory is not a directory!")
+        if code_output_dir.exists() is False:
+            raise ValueError("Code output directory don't exists!")
+        if code_output_dir.is_dir() is False:
+            raise ValueError("Argument value of code output directory is not a directory!")
+        if binary_output_dir.exists() is False:
+            raise ValueError("Binary ouput directory don't exists!")
+        if binary_output_dir.is_dir() is False:
+            raise ValueError("Argument value of binary output directory is not a directory!")
+        if protoc_path.exists() is False:
+            raise ValueError("Protoc file specified with protoc_path don't exists!")
+
         self.pb_version: pb_enum_doc_versions.DocVersion = pb_enum_doc_versions.DocVersion(pb_version)
-        self.excels_dir: str = excels_dir
-        self.code_output_dir: str = code_output_dir
-        self.binary_output_dir: str = binary_output_dir
-        self.protoc_path: str = protoc_path
+        self.excels_dir: Path = excels_dir
+        self.code_output_dir: Path = code_output_dir
+        self.binary_output_dir: Path = binary_output_dir
+        self.protoc_path: Path = protoc_path
 
     def register_extension(self, extension: extensions.Base):
         self.arr_extensions.index(extension)
@@ -47,18 +67,28 @@ class Builder:
         creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path)
         creator.create(table_pb_doc)
 
-    def _load_and_build_tables(self):
+    def _load_and_build_tables(self, excels_dir: Path = None):
         """load excel tables in specific location, parse them with _parse_table method"""
+        if excels_dir is None:
+            excels_dir = self.excels_dir
+        for child in excels_dir.iterdir():
+            path: Path = child
+            if path.is_dir():
+                self._load_and_build_tables(path)
+                continue
+            else:
+                book = xlrd.open_workbook(str(path))
+                self._parse_table(book)
+                self._build_table_pb()
+                self._create_table_objects()
+                self._check_table()
+                self._generate_table_binary()
 
-        # self._parse_table()
-        # self._build_table_pb()
-        # self._create_table_objects()
-        # self._check_table()
-        # self._generate_table_binary()
-        pass
-
-    def _parse_table(self):
+    def _parse_table(self, book: xlrd.Book):
         """parse table to data arrays"""
+        num_work_sheets = book.nsheets
+        if num_work_sheets < 3:
+            raise Exception("Num of Excel sheets less than 3!")
 
     def _build_table_pb(self):
         pass

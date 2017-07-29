@@ -12,9 +12,9 @@ class ECodeTypes(Enum):
 
 
 class CodeCreator:
-    def __init__(self, output_dir: str, protoc_path: str):
-        self.protoc_path: pathlib.Path = pathlib.Path(protoc_path)
-        self.output_dir: pathlib.Path = pathlib.Path(output_dir)
+    def __init__(self, output_dir: pathlib.Path, protoc_path: pathlib.Path):
+        self.protoc_path: pathlib.Path = protoc_path
+        self.output_dir: pathlib.Path = output_dir
 
     def create(self, doc: pb_document.Document):
         types = []
