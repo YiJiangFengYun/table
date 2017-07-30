@@ -1,5 +1,7 @@
+import logging
+import os
+import typing
 from pathlib import Path
-from typing import List
 
 import xlrd
 
@@ -11,7 +13,7 @@ from table_builder import extensions
 
 
 class Builder:
-    arr_extensions: List[extensions.Base] = []
+    arr_extensions: typing.List[extensions.Base] = []
 
     def __init__(self,
                  pb_version: int,
@@ -40,6 +42,7 @@ class Builder:
         self.code_output_dir: Path = code_output_dir
         self.binary_output_dir: Path = binary_output_dir
         self.protoc_path: Path = protoc_path
+        self.table_locals: typing.Mapping[str, typing.Any] = {}
 
     def register_extension(self, extension: extensions.Base):
         self.arr_extensions.index(extension)
@@ -64,8 +67,9 @@ class Builder:
         column_message.add_field("description", pb_build_in_types.type_string)
         column_message.add_field("type_name", pb_build_in_types.type_string)
 
-        creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path)
+        creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
         creator.create(table_pb_doc)
+        print(self.table_locals["Table"])
 
     def _load_and_build_tables(self, excels_dir: Path = None):
         """load excel tables in specific location, parse them with _parse_table method"""
@@ -77,18 +81,39 @@ class Builder:
                 self._load_and_build_tables(path)
                 continue
             else:
-                book = xlrd.open_workbook(str(path))
-                self._parse_table(book)
-                self._build_table_pb()
-                self._create_table_objects()
-                self._check_table()
-                self._generate_table_binary()
+                file_name, file_extension = os.path.splitext(str(path))
+                if file_extension == ".xlsx":
+                    book = xlrd.open_workbook(str(path))
+                    self._parse_table(book)
+                    self._build_table_pb()
+                    self._create_table_objects()
+                    self._check_table()
+                    self._generate_table_binary()
 
     def _parse_table(self, book: xlrd.Book):
         """parse table to data arrays"""
         num_work_sheets = book.nsheets
         if num_work_sheets < 3:
             raise Exception("Num of Excel sheets less than 3!")
+
+        # first sheet, it should be a sheet of target table attributes
+        sheet_index = 0
+        sh = book.sheet_by_index(sheet_index)
+        logging.info("First sheet, name:{0}, row number: {1}, col number: {2}.".format(sh.name, sh.nrows, sh.ncols))
+        for col in range(sh.ncols):
+            for row in range(sh.nrows):
+                if row == 0:
+                    attr_name = str(sh.cell_value(row, col))
+                elif row == 1 and col == 0:
+                    #  table name
+                    table_name = str(sh.cell_value(row, col))
+                else:
+                    for ext in self.arr_extensions:
+                        ext.parseSheetCell(sheet_index, sh.name, col, attr_name, row - 1, sh.cell_value(row, col))
+        if "table_name" in locals():
+            pass
+        else:
+            raise RuntimeError("Table name doesn't exist in Excel. name: {}".format(sh.name))
 
     def _build_table_pb(self):
         pass
