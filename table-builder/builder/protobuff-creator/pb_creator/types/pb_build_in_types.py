@@ -22,9 +22,9 @@ type_bytes = pb_type.Type("bytes")
 map_types: Dict[str, pb_type.Type] = {}
 
 
-def __construct_types(types: Dict[str, pb_type.Type], localScopes: Mapping[str, Any]):
-    for variable in localScopes:
-        if variable is pb_type.Type:
+def __construct_types(types: Dict[str, pb_type.Type], local_scopes: Mapping[str, Any]):
+    for key, variable in local_scopes.items():
+        if isinstance(variable, pb_type.Type):
             var_type: pb_type.Type = variable
             types[var_type.name] = var_type
 

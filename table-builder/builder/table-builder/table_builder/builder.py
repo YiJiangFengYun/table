@@ -86,7 +86,6 @@ class Builder:
                 if file_extension == ".xlsx":
                     book = xlrd.open_workbook(str(path))
                     self._parse_table(book)
-                    self._build_table_pb()
                     self._create_table_objects()
                     self._check_table()
                     self._generate_table_binary()
@@ -135,11 +134,11 @@ class Builder:
         sheet_index = 1
         sh = book.sheet_by_index(sheet_index)
         logging.info("Second sheet, name:{0}, row number: {1}, col number: {2}.".format(sh.name, sh.nrows, sh.ncols))
+        arr_col_objs: typing.List = []
         for row in range(sh.nrows):
             col_name = None
             col_type_name = None
             col_description = None
-            arr_col_objs: typing.List = []
             for col in range(sh.ncols):
                 if row == 0:
                     attr_name = str(sh.cell_value(row, col))
@@ -169,29 +168,33 @@ class Builder:
                 setattr(column_obj, "type_name", col_type_name)
             else:
                 raise RuntimeError(
-                    "Table column type name doesn't exist in Excel, sheet name: {0}, col index: {1}.".format(sh.name,
-                                                                                                             row - 1))
+                    "Table column type name doesn't exist in Excel, sheet name: {0}, col index: {1}.".format(
+                        sh.name,
+                        row - 1))
 
             if col_description is not None:
                 setattr(column_obj, "description", col_description)
             else:
                 raise RuntimeError(
-                    "Table column description doesn't exist in Excel, sheet name: {0}, col index: {1}.".format(sh.name,
-                                                                                                               row - 1))
+                    "Table column description doesn't exist in Excel, sheet name: {0}, col index: {1}.".format(
+                        sh.name,
+                        row - 1))
 
             arr_col_objs.append(column_obj)
-            self._build_table_pb(table_name, arr_col_objs)
+        self._build_table_pb(table_name, arr_col_objs)
 
     def _build_table_pb(self, table_name: str, arr_col_objs: typing.List):
         """build table dynamic proto buffer document, run protoc application to generate
         protocol code for difference languages."""
         package_name = "table"
         pb_doc: pb_document.Document = pb_document.Document(table_name, self.pb_version, package_name)
-        table_message = pb_doc.add_message(
-            table_name[0:1].upper() + table_name[1:]  # convert first char to uppercase
-        )
+        message_name = table_name.replace(" ", "_")  # replace space with underscore.
+        message_name = message_name[0:1].upper() + message_name[1:]  # convert first char to uppercase
+        table_message = pb_doc.add_message(message_name)
         for col_obj in arr_col_objs:
-            table_message.add_field(getattr(col_obj, "name"), pb_build_in_types.map_types[getattr(col_obj, "type_name")])
+            col_name: str = getattr(col_obj, "name")
+            col_name = col_name.replace(" ", "_")  # replace space with underscore.
+            table_message.add_field(col_name, pb_build_in_types.map_types[getattr(col_obj, "type_name")])
         creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
         creator.create(pb_doc)
         pass
