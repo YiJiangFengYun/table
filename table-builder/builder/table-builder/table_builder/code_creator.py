@@ -9,7 +9,9 @@ from pb_creator import pb_document
 
 class ECodeTypes(Enum):
     PYTHON = 0
-    COUNT = 1
+    CPP = 1
+    CSharp = 2
+    COUNT = 4
 
 
 class CodeCreator:
@@ -39,6 +41,10 @@ class CodeCreator:
             for code_type in types:
                 if code_type == ECodeTypes.PYTHON:
                     self._create_python(doc_name, proto_file_name, self.output_dir)
+                elif code_type == ECodeTypes.CPP:
+                    self._create_cpp(doc_name, proto_file_name, self.output_dir)
+                elif code_type == ECodeTypes.CSharp:
+                    self._create_csharp(doc_name, proto_file_name, self.output_dir)
                 else:
                     raise ValueError("Type is undefined.")
 
@@ -54,6 +60,22 @@ class CodeCreator:
                                  str(output_dir.joinpath(proto_file_name))])
         result.check_returncode()
         # The process has finished.
-        # load proto code and import it.
+        # load proto code and import it, because the runtime will use their definition.
         python_code_file_path = python_out_path.joinpath(doc_name + "_pb2.py")
         exec(open(python_code_file_path).read(), globals(), self.table_locals)
+
+    def _create_cpp(self, doc_name: str, proto_file_name: str, output_dir: pathlib.Path):
+        cpp_out_path = output_dir.joinpath("cpp")
+        cpp_out_path.mkdir(exist_ok=True)
+        subprocess.run([str(self.protoc_path),
+                        "--proto_path=" + str(output_dir),
+                        "--cpp_out=" + str(cpp_out_path),
+                        str(output_dir.joinpath(proto_file_name))])
+
+    def _create_csharp(self, doc_name: str, proto_file_name: str, output_dir: pathlib.Path):
+        csharp_out_path = output_dir.joinpath("csharp")
+        csharp_out_path.mkdir(exist_ok=True)
+        subprocess.run([str(self.protoc_path),
+                        "--proto_path=" + str(output_dir),
+                        "--csharp_out=" + str(csharp_out_path),
+                        str(output_dir.joinpath(proto_file_name))])
