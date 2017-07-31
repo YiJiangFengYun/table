@@ -1,4 +1,7 @@
 from pb_creator.types import pb_type
+from typing import Dict
+from typing import Mapping
+from typing import Any
 
 type_double = pb_type.Type("double")
 type_float = pb_type.Type("float")
@@ -15,3 +18,15 @@ type_sfixed64 = pb_type.Type("sfixed64")
 type_bool = pb_type.Type("bool")
 type_string = pb_type.Type("string")
 type_bytes = pb_type.Type("bytes")
+
+map_types: Dict[str, pb_type.Type] = {}
+
+
+def __construct_types(types: Dict[str, pb_type.Type], localScopes: Mapping[str, Any]):
+    for variable in localScopes:
+        if variable is pb_type.Type:
+            var_type: pb_type.Type = variable
+            types[var_type.name] = var_type
+
+
+__construct_types(map_types, locals())

@@ -9,3 +9,4 @@ table_test = table_pb2.Table()
 
 #  Assign a string to name
 table_test.name = "test_table"
+setattr(table_test, "name", "test_table")
