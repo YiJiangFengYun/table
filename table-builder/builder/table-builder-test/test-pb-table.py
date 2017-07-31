@@ -8,5 +8,7 @@ table_test = table_pb2.Table()
 # table_test.color = 1
 
 #  Assign a string to name
-table_test.name = "test_table"
+print(type(getattr(table_test, "name")))
+table_test.name = type(getattr(table_test, "name"))(1)
+print("table_test.name: {}".format(table_test.name))
 setattr(table_test, "name", "test_table")

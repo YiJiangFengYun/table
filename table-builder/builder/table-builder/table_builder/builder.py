@@ -2,6 +2,7 @@ import logging
 import os
 import typing
 from pathlib import Path
+from google.protobuf import message
 
 import xlrd
 
@@ -9,6 +10,7 @@ from pb_creator import pb_document
 from pb_creator import pb_enum_doc_versions
 from pb_creator.types import pb_build_in_types
 from table_builder import code_creator
+from table_builder import binary_creator
 from table_builder import extensions
 
 
@@ -85,13 +87,15 @@ class Builder:
                 file_name, file_extension = os.path.splitext(str(path))
                 if file_extension == ".xlsx":
                     book = xlrd.open_workbook(str(path))
-                    self._parse_table(book)
-                    self._create_table_objects()
-                    self._check_table()
-                    self._generate_table_binary()
+                    table_obj, arr_col_objs, arr_table_items = self._parse_table(book)
+                    self._check_table(arr_col_objs, arr_table_items)
+                    result = self._generate_table_binary(arr_table_items)
+                    file_creator = binary_creator.BinaryCreator(self.binary_output_dir)
+                    file_name = getattr(table_obj, "name")
+                    file_creator.create(file_name, result)
 
     def _parse_table(self, book: xlrd.Book):
-        """parse table to data arrays"""
+        """parse table to table object, and create table pb"""
         num_work_sheets = book.nsheets
         if num_work_sheets < 3:
             raise Exception("Num of Excel sheets less than 3!")
@@ -145,6 +149,7 @@ class Builder:
                 else:
                     if col == 0:
                         col_name = str(sh.cell_value(row, col))
+                        col_name = col_name.replace(" ", "_")
                     elif col == 1:
                         col_type_name = str(sh.cell_value(row, col))
                     elif col == 2:
@@ -181,29 +186,54 @@ class Builder:
                         row - 1))
 
             arr_col_objs.append(column_obj)
-        self._build_table_pb(table_name, arr_col_objs)
 
-    def _build_table_pb(self, table_name: str, arr_col_objs: typing.List):
+        message_name = self._build_table_pb(table_name, arr_col_objs)
+
+        #  Third sheet,  it should be a sheet of actual data of target table.
+        sheet_index = 2
+        sh = book.sheet_by_index(sheet_index)
+        logging.info("Third sheet, name:{0}, row number: {1}, col number: {2}.".format(sh.name, sh.nrows, sh.ncols))
+        arr_table_items: typing.List = []
+        for row in range(sh.nrows):
+            table_item = self.table_locals[message_name]()
+            for col in range(sh.ncols):
+                if row == 0:
+                    attr_name = str(sh.cell_value(row, col))
+                else:
+                    item_field_name = getattr(arr_col_objs[col], "name")
+                    item_field_type = type(getattr(table_item, item_field_name))
+                    try:
+                        item_field_value = item_field_type(sh.cell_value(row, col))
+                    except Exception as e:
+                        logging.error(e)
+                    else:
+                        setattr(table_item, item_field_name, item_field_value)
+            arr_table_items.append(table_item)
+        return table_obj, arr_col_objs, arr_table_items
+
+    def _build_table_pb(self, table_name: str, arr_col_objs: typing.List) -> str:
         """build table dynamic proto buffer document, run protoc application to generate
         protocol code for difference languages."""
+        table_name = table_name.replace(" ", "_")  # replace space with underscore.
         package_name = "table"
         pb_doc: pb_document.Document = pb_document.Document(table_name, self.pb_version, package_name)
-        message_name = table_name.replace(" ", "_")  # replace space with underscore.
-        message_name = message_name[0:1].upper() + message_name[1:]  # convert first char to uppercase
-        table_message = pb_doc.add_message(message_name)
+        table_name = table_name[0:1].upper() + table_name[1:]  # convert first char to uppercase
+        table_message = pb_doc.add_message(table_name)
         for col_obj in arr_col_objs:
             col_name: str = getattr(col_obj, "name")
             col_name = col_name.replace(" ", "_")  # replace space with underscore.
             table_message.add_field(col_name, pb_build_in_types.map_types[getattr(col_obj, "type_name")])
         creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
         creator.create(pb_doc)
+        return table_name
+
+    def _check_table(self, arr_col_objs: typing.List, arr_table_items: typing.List):
         pass
 
-    def _create_table_objects(self):
-        pass
-
-    def _check_table(self):
-        pass
-
-    def _generate_table_binary(self):
-        pass
+    @staticmethod
+    def _generate_table_binary(arr_table_items: typing.List):
+        result: bytes = bytes()
+        for table_item in arr_table_items:
+            table_item_msg: message.Message = table_item
+            result += table_item_msg.SerializePartialToString()
+        return result
