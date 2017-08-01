@@ -5,17 +5,13 @@ DocType = pb_type.Type
 
 
 class Field(base.Base):
-    def __init__(self, field_name: str, field_type: pb_type.Type, field_option: dict = None):
-        super(Field, self).__init__(field_name, field_option)
-        self.is_repeated: bool = False
-        if field_option is not None and "is_repeated" in field_option:
-            self.is_repeated = field_option["is_repeated"]
-        self.number: int = 0
-        if field_option is not None and "number" in field_option:
-            self.number = field_option["number"]
+    def __init__(self, field_name: str, field_type: pb_type.Type, number: int = 0, is_repeated: bool = False):
+        super(Field, self).__init__(field_name)
+        self.is_repeated: bool = is_repeated
+        self.number: int = number
         self.type: DocType = field_type
 
-    def to_text(self, option: dict) -> str:
+    def to_text(self) -> str:
         result = ""
         if self.is_repeated:
             result += "repeated "

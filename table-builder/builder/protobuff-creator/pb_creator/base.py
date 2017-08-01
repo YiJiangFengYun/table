@@ -1,7 +1,7 @@
 class Base:
-    def __init__(self, name: str, option: dict = None):
+    def __init__(self, name: str):
         self.name = name
 
-    def to_text(self, option: dict) -> str:
+    def to_text(self) -> str:
         return self.name
 

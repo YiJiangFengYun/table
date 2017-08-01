@@ -11,10 +11,10 @@ from pb_creator import pb_enum_doc_versions
 
 class Document(base.Base):
     def __init__(self, name: str, version: pb_enum_doc_versions.DocVersion,
-                 package_name: str, option: Dict = None):
-        super(Document, self).__init__(name, option)
+                 package_name: str):
+        super(Document, self).__init__(name)
         self.version = version
-        self.syntax = pb_syntax.Syntax("documentSyntax", {version: self.version})
+        self.syntax = pb_syntax.Syntax("documentSyntax", version)
         self.package = pb_package.Package(package_name)
         self.arr_imports: List[pb_import.Import] = []
         self.map_imports: Dict[str, pb_import.Import] = {}
@@ -34,22 +34,18 @@ class Document(base.Base):
         del self.arr_messages
         del self.map_messages
 
-    def to_text(self, option: dict = None) -> str:
-        if option is None:
-            option = {}
+    def to_text(self) -> str:
         is_format = False
-        if option is not None and "is_format" in option:
-            is_format = option["is_format"]
         result = ""
         is_need_new_line = False
 
         # syntax
-        result += self.syntax.to_text(option)
+        result += self.syntax.to_text()
         if is_format:
             result += "\n"
 
         # package
-        result += self.package.to_text(option)
+        result += self.package.to_text()
 
         # imports
         arr_imports = self.arr_imports
@@ -58,7 +54,7 @@ class Document(base.Base):
             result += "\n"
             is_need_new_line = False
         for import_item in arr_imports:
-            result += import_item.to_text(option)
+            result += import_item.to_text()
             if is_need_new_line:
                 result += "\n"
             if is_format:
@@ -71,7 +67,7 @@ class Document(base.Base):
             result += "\n"
             is_need_new_line = False
         for enum_item in arr_enums:
-            result += enum_item.to_text(option)
+            result += enum_item.to_text()
             if is_need_new_line:
                 result += "\n"
             if is_format:
@@ -84,7 +80,7 @@ class Document(base.Base):
             result += "\n"
             is_need_new_line = False
         for message_item in arr_messages:
-            result += message_item.to_text(option)
+            result += message_item.to_text()
             if is_need_new_line:
                 result += "\n"
             if is_format:
@@ -93,9 +89,9 @@ class Document(base.Base):
         is_need_new_line = False
         return result
 
-    def add_import(self, name: str, option: dict = None) -> pb_import.Import:
+    def add_import(self, name: str, mode: str = "") -> pb_import.Import:
         self.remove_import(name)
-        imp = pb_import.Import(name, option)
+        imp = pb_import.Import(name, mode)
         self.arr_imports.append(imp)
         self.map_imports[name] = imp
         return imp
@@ -109,9 +105,9 @@ class Document(base.Base):
             del map_imports[name]
         return imp
 
-    def add_enum(self, name: str, option: dict = None) -> pb_enum.Enum:
+    def add_enum(self, name: str) -> pb_enum.Enum:
         self.remove_enum(name)
-        enum = pb_enum.Enum(name, option)
+        enum = pb_enum.Enum(name)
         self.arr_enums.append(enum)
         self.map_enums[name] = enum
         return enum
@@ -125,9 +121,9 @@ class Document(base.Base):
             del map_enums[name]
         return enum
 
-    def add_message(self, name: str, option: dict = None) -> pb_message.Message:
+    def add_message(self, name: str) -> pb_message.Message:
         self.remove_message(name)
-        message: pb_message.Message = pb_message.Message(name, option)
+        message: pb_message.Message = pb_message.Message(name)
         self.arr_messages.append(message)
         self.map_messages[name] = message
         return message

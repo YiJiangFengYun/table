@@ -2,13 +2,11 @@ from pb_creator import base
 
 
 class Import(base.Base):
-    def __init__(self, name: str, option: dict = None):
-        super(Import, self).__init__(name, option)
-        self.mode = ""
-        if option is not None and "mode" in option:
-            self.mode = option["mode"]
+    def __init__(self, name: str, mode: str = ""):
+        super(Import, self).__init__(name)
+        self.mode = mode
 
-    def to_text(self, option: dict) -> str:
+    def to_text(self) -> str:
         result_str = "import "
         if self.mode != "":
             result_str += self.mode + " "
