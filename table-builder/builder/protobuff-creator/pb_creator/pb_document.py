@@ -35,58 +35,37 @@ class Document(base.Base):
         del self.map_messages
 
     def to_text(self) -> str:
-        is_format = False
         result = ""
-        is_need_new_line = False
 
         # syntax
         result += self.syntax.to_text()
-        if is_format:
-            result += "\n"
+
+        result += " "
 
         # package
         result += self.package.to_text()
 
+        result += " "
+
         # imports
         arr_imports = self.arr_imports
-        arr_len = len(arr_imports)
-        if is_need_new_line and arr_len != 0:
-            result += "\n"
-            is_need_new_line = False
         for import_item in arr_imports:
             result += import_item.to_text()
-            if is_need_new_line:
-                result += "\n"
-            if is_format:
-                is_need_new_line = True
+
+        result += " "
 
         # enums
         arr_enums = self.arr_enums
-        arr_len = len(arr_enums)
-        if is_need_new_line and arr_len != 0:
-            result += "\n"
-            is_need_new_line = False
         for enum_item in arr_enums:
             result += enum_item.to_text()
-            if is_need_new_line:
-                result += "\n"
-            if is_format:
-                is_need_new_line = True
+            result += " "
 
         # messages
         arr_messages = self.arr_messages
-        arr_len = len(arr_messages)
-        if is_need_new_line and arr_len != 0:
-            result += "\n"
-            is_need_new_line = False
         for message_item in arr_messages:
             result += message_item.to_text()
-            if is_need_new_line:
-                result += "\n"
-            if is_format:
-                is_need_new_line = True
+            result += " "
 
-        is_need_new_line = False
         return result
 
     def add_import(self, name: str, mode: str = "") -> pb_import.Import:
@@ -107,7 +86,7 @@ class Document(base.Base):
 
     def add_enum(self, name: str) -> pb_enum.Enum:
         self.remove_enum(name)
-        enum = pb_enum.Enum(name)
+        enum:pb_enum.Enum = pb_enum.Enum(name)
         self.arr_enums.append(enum)
         self.map_enums[name] = enum
         return enum

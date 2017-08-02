@@ -12,7 +12,13 @@ message1 = doc.add_message("message1-test")
 
 enum1.add_field("ENUM_1")
 message1.add_field("field", pb_build_in_types.type_string)
+message1.add_field("field2", pb_build_in_types.type_int32)
+message1.add_field("field3", pb_build_in_types.type_bytes)
+message1.add_field("field4", pb_build_in_types.type_double)
 message1.add_field("fieldRepeat", pb_build_in_types.type_int32, True)
+
+message1.add_one_of_group("oneof1", ["field", "field2"])
+message1.add_one_of_group("oneof2", ["field3", "field4"])
 
 message2 = doc.add_message("message2-test")
 message2.add_field("enum1", enum1)
