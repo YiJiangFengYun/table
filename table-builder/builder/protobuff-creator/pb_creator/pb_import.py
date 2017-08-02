@@ -10,5 +10,5 @@ class Import(base.Base):
         result_str = "import "
         if self.mode != "":
             result_str += self.mode + " "
-        result_str += self.name + ";"
+        result_str += "\"" + self.name + "\"" + ";"
         return result_str

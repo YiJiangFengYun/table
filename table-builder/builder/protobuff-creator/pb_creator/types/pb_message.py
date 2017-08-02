@@ -10,12 +10,16 @@ class Message(pb_type.Type):
         self.arr_fields: List[pb_field.Field] = []
         self.map_fields: Dict[str, pb_field.Field] = {}
 
-    def add_field(self, field_name: str, field_type: pb_type.Type, is_repeated: bool = False) -> pb_field.Field:
+    def add_field(self, field_name: str, field_type: pb_type.Type, is_repeated: bool = False,
+                  number: int = 0) -> pb_field.Field:
         self.remove_field(field_name)
         new_field: pb_field.Field = pb_field.Field(field_name, field_type, is_repeated=is_repeated)
         arr_fields = self.arr_fields
-        # start from 1
-        new_field.number = len(arr_fields) + 1
+        if number == 0:
+            # start from 1
+            new_field.number = len(arr_fields) + 1
+        else:
+            new_field.number = number
         arr_fields.append(new_field)
         self.map_fields[field_name] = new_field
         return new_field
@@ -30,17 +34,10 @@ class Message(pb_type.Type):
         return field_item
 
     def to_text(self) -> str:
-        is_format = False
         result = "message " + self.name
-        if is_format:
-            result += "\n"
         result += " { "
-        if is_format:
-            result += "\n"
         arr_fields = self.arr_fields
         for field_item in arr_fields:
             result += field_item.to_text()
-            if is_format:
-                result += "\n"
         result += " }"
         return result
