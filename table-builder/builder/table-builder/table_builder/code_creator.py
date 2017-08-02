@@ -1,6 +1,7 @@
-import os
+import importlib
 import pathlib
 import subprocess
+import sys
 import typing
 from enum import Enum
 
@@ -11,19 +12,20 @@ class ECodeTypes(Enum):
     PYTHON = 0
     CPP = 1
     CSharp = 2
-    COUNT = 4
+    COUNT = 3
 
 
 class CodeCreator:
     def __init__(self,
                  output_dir: pathlib.Path,
                  protoc_path: pathlib.Path,
-                 table_locals: typing.Mapping[str, typing.Any]):
+                 table_locals: typing.Dict[str, typing.Any]):
         self.protoc_path: pathlib.Path = protoc_path
         self.output_dir: pathlib.Path = output_dir
         self.table_locals = table_locals
 
     def create(self, doc: pb_document.Document):
+        python_module_name: str = None
         types = []
         for code_type in range(ECodeTypes.COUNT.value):
             types.append(ECodeTypes(code_type))
@@ -40,7 +42,7 @@ class CodeCreator:
             #  Call protoc command to create code
             for code_type in types:
                 if code_type == ECodeTypes.PYTHON:
-                    self._create_python(doc_name, proto_file_name, self.output_dir)
+                    python_module_name = self._create_python(doc_name, proto_file_name, self.output_dir)
                 elif code_type == ECodeTypes.CPP:
                     self._create_cpp(doc_name, proto_file_name, self.output_dir)
                 elif code_type == ECodeTypes.CSharp:
@@ -48,8 +50,11 @@ class CodeCreator:
                 else:
                     raise ValueError("Type is undefined.")
 
-            # Delete temp .proto file
-            os.remove(str(temp_file_path))
+                    # # Delete .proto file
+                    # os.remove(str(temp_file_path))
+        if python_module_name is None:
+            raise RuntimeError("Create python module name error.")
+        return python_module_name
 
     def _create_python(self, doc_name: str, proto_file_name: str, output_dir: pathlib.Path):
         python_out_path = output_dir.joinpath("python")
@@ -61,8 +66,12 @@ class CodeCreator:
         result.check_returncode()
         # The process has finished.
         # load proto code and import it, because the runtime will use their definition.
-        python_code_file_path = python_out_path.joinpath(doc_name + "_pb2.py")
-        exec(open(python_code_file_path).read(), globals(), self.table_locals)
+        if python_out_path not in sys.path:
+            sys.path.append(str(python_out_path))
+        python_module_name = doc_name + "_pb2"
+        result = importlib.import_module(python_module_name)
+        self.table_locals[python_module_name] = result
+        return python_module_name
 
     def _create_cpp(self, doc_name: str, proto_file_name: str, output_dir: pathlib.Path):
         cpp_out_path = output_dir.joinpath("cpp")
