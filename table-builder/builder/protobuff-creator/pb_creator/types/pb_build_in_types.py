@@ -18,6 +18,7 @@ type_sfixed64 = pb_type.Type("sfixed64")
 type_bool = pb_type.Type("bool")
 type_string = pb_type.Type("string")
 type_bytes = pb_type.Type("bytes")
+type_any = pb_type.Type("google.protobuf.Any")
 
 map_types: Dict[str, pb_type.Type] = {}
 
