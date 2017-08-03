@@ -67,6 +67,9 @@ class Builder:
         protocol code for difference languages."""
         package_name = "table"
         table_pb_doc: pb_document.Document = pb_document.Document("table", self.pb_version, package_name)
+
+        table_pb_doc.add_import("google/protobuf/any.proto")
+
         table_message = table_pb_doc.add_message("Table")
         table_message.add_field("name", pb_build_in_types.type_string)
         table_message.add_field("description", pb_build_in_types.type_string)
@@ -75,6 +78,9 @@ class Builder:
         column_message.add_field("name", pb_build_in_types.type_string)
         column_message.add_field("description", pb_build_in_types.type_string)
         column_message.add_field("type_name", pb_build_in_types.type_string)
+
+        wrapper_message = table_pb_doc.add_message("Wrapper")
+        wrapper_message.add_field("contents", pb_build_in_types.type_any, True)
 
         creator: code_creator.CodeCreator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
         self.table_module_name = creator.create(table_pb_doc)
@@ -257,8 +263,8 @@ class Builder:
         table_message.add_field("items", table_item_message, True)
 
         # Create proto file and codes.
-        creator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
-        module_name = creator.create(pb_doc)
+        creator: code_creator.CodeCreator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
+        module_name: str = creator.create(pb_doc)
 
         # Add msg id
         self.table_msg_id += 1
@@ -273,4 +279,9 @@ class Builder:
         table_obj = getattr(sheet_table_obj, "table")
         file_name = getattr(table_obj, "name")
         msg: message.Message = sheet_table_obj
-        file_creator.create(file_name, msg.SerializePartialToString())
+        wrapper_obj = getattr(self.table_locals[self.table_module_name], "Wrapper")()
+        contents = getattr(wrapper_obj, "contents")
+        new_content = contents.add()
+        new_content.Pack(msg)
+        # status.add_details()->PackFrom(details)
+        file_creator.create(file_name, new_content.SerializePartialToString())
