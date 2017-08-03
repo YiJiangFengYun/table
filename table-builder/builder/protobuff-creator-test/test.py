@@ -22,6 +22,8 @@ message1.add_one_of_group("oneof2", ["field3", "field4"])
 
 message2 = doc.add_message("message2-test")
 message2.add_field("enum1", enum1)
+message2.add_map_field("map1", pb_build_in_types.type_string, pb_build_in_types.type_double)
+message2.add_map_field("map2", pb_build_in_types.type_int32, pb_build_in_types.type_string)
 
 print("document to text: ")
 print(doc.to_text())

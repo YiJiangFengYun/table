@@ -1,7 +1,9 @@
-from typing import List
 from typing import Dict
-from pb_creator.types import pb_type
+from typing import List
+
 from pb_creator.types import pb_field
+from pb_creator.types import pb_map_field
+from pb_creator.types import pb_type
 
 
 class Message(pb_type.Type):
@@ -34,6 +36,24 @@ class Message(pb_type.Type):
             self.arr_fields.remove(field_item)
             del map_fields[field_name]
         return field_item
+
+    def add_map_field(self, field_name: str, field_key_type: pb_type.Type, field_type: pb_type.Type,
+                      number: int = 0) -> pb_map_field.MapField:
+        self.remove_map_field(field_name)
+        new_field: pb_map_field.MapField = pb_map_field.MapField(field_name, field_key_type, field_type)
+        arr_fields = self.arr_fields
+        if number == 0:
+            # start from 1
+            new_field.number = len(arr_fields) + 1
+        else:
+            new_field.number = number
+        arr_fields.append(new_field)
+        self.map_fields[field_name] = new_field
+        return new_field
+
+    def remove_map_field(self, field_name: str) -> pb_map_field.MapField:
+        map_field: pb_map_field.MapField =  self.remove_field(field_name)
+        return map_field
 
     def add_one_of_group(self, name: str, field_names: List[str]):
         # check field name is exist.
