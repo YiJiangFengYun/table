@@ -213,7 +213,9 @@ class Builder:
         columns_field.extend(arr_col_objs)
         arr_table_items: typing.List = []
         for row in range(sh.nrows):
-            table_item = getattr(self.table_locals[sheet_msg_module_name], sheet_table_item_msg_name)()
+            table_item = None
+            if row != 0:
+                table_item = getattr(self.table_locals[sheet_msg_module_name], sheet_table_item_msg_name)()
             for col in range(sh.ncols):
                 if row == 0:
                     attr_name = str(sh.cell_value(row, col))
@@ -226,7 +228,8 @@ class Builder:
                         logging.warning(e)
                     else:
                         setattr(table_item, item_field_name, item_field_value)
-            arr_table_items.append(table_item)
+            if row != 0 and table_item is not None:
+                arr_table_items.append(table_item)
         items_field = getattr(sheet_table_obj, "items")
         items_field.extend(arr_table_items)
         return sheet_table_obj
@@ -284,4 +287,4 @@ class Builder:
         new_content = contents.add()
         new_content.Pack(msg)
         # status.add_details()->PackFrom(details)
-        file_creator.create(file_name, new_content.SerializePartialToString())
+        file_creator.create(file_name, wrapper_obj.SerializePartialToString())
