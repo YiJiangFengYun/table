@@ -1,0 +1,10 @@
+
+ì
+,type.googleapis.com/table.Packet_id_allocate»
+
+packet id allocate
+idint32
+namestring
+descriptionstring
+packet_structionstringS
+log packet-this packet use to ouput log to log view app."log-packet-struction

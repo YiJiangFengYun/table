@@ -1,0 +1,1 @@
+syntax = "proto3"; package table; import "table.proto"; message Log_packet_struction { Table table = 1;repeated Column columns = 2;repeated Log_packet_structionItem items = 3; } message Log_packet_structionItem { string name = 1;int32 size = 2;string description = 3;string key_name_for_code = 4;string key_type_for_code = 5; } 

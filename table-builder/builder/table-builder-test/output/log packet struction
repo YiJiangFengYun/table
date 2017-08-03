@@ -1,0 +1,16 @@
+
+÷
+.type.googleapis.com/table.Log_packet_structionÄ
+
+log packet struction
+namestring
+sizeint32
+descriptionstring
+key_name_for_codestring
+key_type_for_codestringM
+packet size)packet total size, include id and content"
+packetSize*int32*
+
+packdet id	packet id"packetId*int32"
+level	log level"level*int32
+msglog msg"msg*string

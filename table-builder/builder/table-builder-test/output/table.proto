@@ -1,0 +1,1 @@
+syntax = "proto3"; package table; import "google/protobuf/any.proto"; message Table { string name = 1;string description = 2; } message Column { string name = 1;string description = 2;string type_name = 3; } message Wrapper { repeated google.protobuf.Any contents = 1; } 

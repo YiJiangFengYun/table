@@ -1,0 +1,1 @@
+syntax = "proto3"; package table; import "table.proto"; message Packet_id_allocate { Table table = 1;repeated Column columns = 2;repeated Packet_id_allocateItem items = 3; } message Packet_id_allocateItem { int32 id = 1;string name = 2;string description = 3;string packet_struction = 4; } 
