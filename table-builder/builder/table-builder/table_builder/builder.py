@@ -82,6 +82,9 @@ class Builder:
         wrapper_message = table_pb_doc.add_message("Wrapper")
         wrapper_message.add_field("contents", pb_build_in_types.type_any, True)
 
+        for ext in self.arr_extensions:
+            ext.on_post_create_table_pb_doc(table_pb_doc)
+
         creator: code_creator.CodeCreator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
         self.table_module_name = creator.create(table_pb_doc)
 
@@ -130,8 +133,6 @@ class Builder:
                     table_description = str(sh.cell_value(row, col))
                 else:
                     pass
-                    # for ext in self.arr_extensions:
-                    #     ext.parseSheetCell(sheet_index, sh.name, col, attr_name, row - 1, sh.cell_value(row, col))
 
         # create table object.
         table_obj = getattr(self.table_locals[self.table_module_name], "Table")()
@@ -145,6 +146,9 @@ class Builder:
             setattr(table_obj, "description", table_description)
         else:
             raise RuntimeError("Table description doesn't exist in Excel. sheet name: {}.".format(sh.name))
+
+        for ext in self.arr_extensions:
+            ext.on_post_create_table_obj(table_obj, sh)
 
         # second sheet, it should be a sheet of target table column attributes
         sheet_index = 1
@@ -199,6 +203,9 @@ class Builder:
 
             arr_col_objs.append(column_obj)
 
+        for ext in self.arr_extensions:
+            ext.on_post_create_column_objs(arr_col_objs, sh)
+
         sheet_msg_module_name, sheet_table_msg_name, sheet_table_item_msg_name = self._build_table_pb(table_name,
                                                                                                       arr_col_objs)
 
@@ -230,6 +237,10 @@ class Builder:
                         setattr(table_item, item_field_name, item_field_value)
             if row != 0 and table_item is not None:
                 arr_table_items.append(table_item)
+
+        for ext in self.arr_extensions:
+            ext.on_post_create_item_objs(arr_table_items, sh)
+
         items_field = getattr(sheet_table_obj, "items")
         items_field.extend(arr_table_items)
         return sheet_table_obj
@@ -259,11 +270,14 @@ class Builder:
         table_item_message = pb_doc.add_message(table_item_name)
         for col_obj in arr_col_objs:
             col_name: str = getattr(col_obj, "name")
-            col_name = col_name.replace(" ", "_")  # replace space with underscore.
+            # col_name = col_name.replace(" ", "_")  # replace space with underscore.
             table_item_message.add_field(col_name, pb_build_in_types.map_types[getattr(col_obj, "type_name")])
 
         # Add items field to sheet table message.
         table_message.add_field("items", table_item_message, True)
+
+        for ext in self.arr_extensions:
+            ext.on_post_create_sheet_pb_doc(pb_doc)
 
         # Create proto file and codes.
         creator: code_creator.CodeCreator = code_creator.CodeCreator(self.code_output_dir, self.protoc_path, self.table_locals)
