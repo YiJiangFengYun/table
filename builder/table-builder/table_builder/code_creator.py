@@ -12,7 +12,8 @@ class ECodeTypes(Enum):
     PYTHON = 0
     CPP = 1
     CSharp = 2
-    COUNT = 3
+    JS = 3
+    COUNT = 4
 
 
 class CodeCreator:
@@ -47,6 +48,8 @@ class CodeCreator:
                     self._create_cpp(doc_name, proto_file_name, self.output_dir)
                 elif code_type == ECodeTypes.CSharp:
                     self._create_csharp(doc_name, proto_file_name, self.output_dir)
+                elif code_type == ECodeTypes.JS:
+                    self._create_js(doc_name, proto_file_name, self.output_dir)
                 else:
                     raise ValueError("Type is undefined.")
 
@@ -87,4 +90,12 @@ class CodeCreator:
         subprocess.run([str(self.protoc_path),
                         "--proto_path=" + str(output_dir),
                         "--csharp_out=" + str(csharp_out_path),
+                        str(output_dir.joinpath(proto_file_name))])
+
+    def _create_js(self, doc_name: str, proto_file_name: str, output_dir: pathlib.Path):
+        js_out_path = output_dir.joinpath("js")
+        js_out_path.mkdir(exist_ok=True)
+        subprocess.run([str(self.protoc_path),
+                        "--proto_path=" + str(output_dir),
+                        "--js_out=" + str(js_out_path),
                         str(output_dir.joinpath(proto_file_name))])
