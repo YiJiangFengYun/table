@@ -1,3 +1,9 @@
+from os import path
+import sys
+file_dir = path.dirname(__file__)
+sys.path.append(path.join(file_dir, "../protobuff-creator"))
+sys.path.append(path.join(file_dir, "../table-builder"))
+
 from pathlib import Path
 
 from table_builder import builder

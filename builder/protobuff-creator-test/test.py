@@ -1,6 +1,7 @@
 from os import path
 import sys
-sys.path.append(path.abspath("../protobuff-creator"))
+file_dir = path.dirname(__file__)
+sys.path.append(path.join(file_dir, "../protobuff-creator"))
 
 from pb_creator import pb_document
 from pb_creator import pb_enum_doc_versions
