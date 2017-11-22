@@ -1,5 +1,5 @@
 @echo off
-set "VIRTUAL_ENV=F:\my-work-space\common\table\table.git\table-builder\builder\builder-python-env"
+set "VIRTUAL_ENV=F:\my-work-space\common\table\builder-python-env2"
 
 if not defined PROMPT (
     set "PROMPT=$P$G"
@@ -14,7 +14,7 @@ if defined _OLD_VIRTUAL_PYTHONHOME (
 )
 
 set "_OLD_VIRTUAL_PROMPT=%PROMPT%"
-set "PROMPT=(builder-python-env) %PROMPT%"
+set "PROMPT=(builder-python-env2) %PROMPT%"
 
 if defined PYTHONHOME (
     set "_OLD_VIRTUAL_PYTHONHOME=%PYTHONHOME%"
