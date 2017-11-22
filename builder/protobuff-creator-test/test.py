@@ -1,3 +1,7 @@
+from os import path
+import sys
+sys.path.append(path.abspath("../protobuff-creator"))
+
 from pb_creator import pb_document
 from pb_creator import pb_enum_doc_versions
 from pb_creator.types import pb_build_in_types
