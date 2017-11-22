@@ -1,3 +1,14 @@
 {
-    "python.pythonPath": "${workspaceRoot}\\builder-python-env\\Scripts\\python.exe"
+    "python.pythonPath": "${workspaceRoot}\\builder-python-env\\Scripts\\python.exe",
+    "python.unitTest.unittestArgs": [
+        "-v",
+        "-s",
+        "./builder",
+        "-p",
+        "test*.py"
+    ],
+    "python.unitTest.unittestEnabled": false,
+    "python.unitTest.promptToConfigure": false,
+    "python.unitTest.pyTestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false
 }
